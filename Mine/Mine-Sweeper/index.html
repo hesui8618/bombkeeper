@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Mine Sweeper - Free Online Minesweeper Game | bombkeeper.online</title>
+    <meta name="description" content="Play the classic Mine Sweeper online for free. Test your logic skills and clear the minefield without triggering any explosives!">
+    <link rel="canonical" href="https://bombkeeper.online/">
+    <meta name="keywords" content="Mine Sweeper, Minesweeper, online game, logic game, puzzle game">
+    <!-- 预加载游戏iframe URL，提高移动端加载速度 -->
+    <link rel="preconnect" href="https://ohminesweeper.online">
+    <link rel="dns-prefetch" href="https://ohminesweeper.online">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 添加基本的页面结构CSS，在页面完全加载前显示 -->
+    <style>
+        .loading-indicator {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #e74c3c;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 重要内容优先加载 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        
+        :root {
+            --primary-color: #4a80b5;
+            --secondary-color: #5a6c8c;
+            --accent-color: #e74c3c;
+            --background-dark: #2c3e50;
+            --background-light: #f5f7fa;
+            --text-light: #ecf0f1;
+            --text-dark: #2d3436;
+        }
+        
+        body {
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
+        }
+        
+        .game-header {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+        }
+        
+        .game-frame {
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            /* 增大移动端触控区域 */
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* 移动端触控事件优化 */
+        @media (hover: none) {
+            .button:active {
+                background-color: var(--secondary-color);
+                transform: translateY(-2px);
+            }
+        }
+        
+        .feature-card {
+            border-left: 4px solid var(--accent-color);
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        footer {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+        }
+        
+        .lang-button {
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.25rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            /* 增大移动端触控区域 */
+            min-height: 36px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lang-button.active {
+            background-color: var(--accent-color);
+        }
+        
+        .lang-button:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 移动端触控事件优化 */
+        @media (hover: none) {
+            .lang-button:active:not(.active) {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        }
+        
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        /* 修复弹性布局的语言内容 */
+        .lang-content.flex {
+            display: none;
+        }
+        
+        .lang-content.flex.active {
+            display: flex;
+        }
+        
+        /* 优化移动端间距 */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .py-8 {
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+            
+            .mb-12 {
+                margin-bottom: 2rem;
+            }
+        }
+        
+        /* 优化移动端游戏体验 */
+        .game-controls-mobile {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .game-controls-mobile {
+                display: flex;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            
+            .mobile-ctrl-btn {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: var(--primary-color);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 1rem;
+                color: white;
+                font-weight: bold;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            
+            .mobile-ctrl-btn:active {
+                transform: scale(0.95);
+            }
+            
+            /* 移动端游戏框架调整 */
+            .game-frame {
+                aspect-ratio: auto !important;
+                height: 400px;
+                overflow: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* 在移动端显示缩放控制 */
+            .game-zoom-controls {
+                display: flex !important;
+            }
+            
+            .game-frame iframe {
+                transform-origin: 0 0;
+                transition: transform 0.2s ease;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
+    <!-- 加载指示器 -->
+    <div id="loading" class="loading-indicator">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">
+            <!-- 英文 -->
+            <div class="lang-content en active">Loading Mine Sweeper...</div>
+            <!-- 中文 -->
+            <div class="lang-content zh">正在加载扫雷游戏...</div>
+            <!-- 日文 -->
+            <div class="lang-content ja">マインスイーパーを読み込んでいます...</div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="game-header py-4 px-4 md:px-6 lg:px-8">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <!-- English Title -->
+                <div class="lang-content en active">
+                    <h1 class="text-3xl md:text-4xl font-bold">Mine Sweeper</h1>
+                    <p class="text-sm md:text-base mt-1">The ultimate test of logic and patience!</p>
+                </div>
+                
+                <!-- Chinese Title -->
+                <div class="lang-content zh">
+                    <h1 class="text-3xl md:text-4xl font-bold">扫雷</h1>
+                    <p class="text-sm md:text-base mt-1">逻辑与耐心的终极测试！</p>
+                </div>
+                
+                <!-- Japanese Title -->
+                <div class="lang-content ja">
+                    <h1 class="text-3xl md:text-4xl font-bold">マインスイーパー</h1>
+                    <p class="text-sm md:text-base mt-1">論理と忍耐の究極のテスト！</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center md:items-end">
+                <!-- Language Switcher -->
+                <div class="mb-3 flex">
+                    <button class="lang-button active" data-lang="en">English</button>
+                    <button class="lang-button" data-lang="zh">中文</button>
+                    <button class="lang-button" data-lang="ja">日本語</button>
+                </div>
+                <!-- Play Button -->
+                <div class="lang-content en active">
+                    <button class="button px-4 py-2 rounded-md text-sm md:text-base">Play Now</button>
+                </div>
+                <div class="lang-content zh">
+                    <button class="button px-4 py-2 rounded-md text-sm md:text-base">立即游戏</button>
+                </div>
+                <div class="lang-content ja">
+                    <button class="button px-4 py-2 rounded-md text-sm md:text-base">今すぐプレイ</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <!-- Game Section -->
+        <section class="mb-12">
+            <div class="max-w-5xl mx-auto">
+                <div class="game-frame overflow-hidden aspect-video bg-white">
+                    <iframe id="game-iframe" data-src="https://ohminesweeper.online" title="Play Mine Sweeper Online" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <!-- 移动端游戏控制按钮 -->
+                <div class="game-controls-mobile">
+                    <!-- 英文 -->
+                    <div class="lang-content en active">
+                        <button class="mobile-ctrl-btn reveal-btn">Reveal</button>
+                        <button class="mobile-ctrl-btn flag-btn">Flag</button>
+                    </div>
+                    <!-- 中文 -->
+                    <div class="lang-content zh">
+                        <button class="mobile-ctrl-btn reveal-btn">翻开</button>
+                        <button class="mobile-ctrl-btn flag-btn">标记</button>
+                    </div>
+                    <!-- 日文 -->
+                    <div class="lang-content ja">
+                        <button class="mobile-ctrl-btn reveal-btn">開く</button>
+                        <button class="mobile-ctrl-btn flag-btn">印</button>
+                    </div>
+                </div>
+                
+                <!-- 移动端游戏缩放控制 -->
+                <div class="game-zoom-controls mt-2 hidden">
+                    <!-- 英文 -->
+                    <div class="lang-content en active flex justify-center">
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-out">-</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-reset">Reset</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded zoom-in">+</button>
+                    </div>
+                    <!-- 中文 -->
+                    <div class="lang-content zh flex justify-center">
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-out">-</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-reset">重置</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded zoom-in">+</button>
+                    </div>
+                    <!-- 日文 -->
+                    <div class="lang-content ja flex justify-center">
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-out">-</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded mr-2 zoom-reset">リセット</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 rounded zoom-in">+</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Description -->
+        <section class="mb-12 max-w-4xl mx-auto">
+            <!-- English -->
+            <div class="lang-content en active">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">About Mine Sweeper</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        Mine Sweeper is a classic puzzle game that challenges your logical thinking and deduction skills. The objective is simple: clear the minefield without detonating any mines. Using clues provided by numbered squares, you must carefully navigate through the field and flag all hidden mines.
+                    </p>
+                    <p>
+                        Originally popularized as a computer game in the 1990s, Mine Sweeper has remained a beloved brain teaser for generations. Our online version brings this timeless classic to your browser, allowing you to enjoy the game anytime, anywhere, without any downloads or installations.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Chinese -->
+            <div class="lang-content zh">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">关于扫雷</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        扫雷是一款经典的益智游戏，它挑战您的逻辑思维和推理能力。游戏目标很简单：在不引爆任何地雷的情况下清除雷区。利用数字方块提供的线索，您必须谨慎地穿越雷区并标记所有隐藏的地雷。
+                    </p>
+                    <p>
+                        扫雷作为电脑游戏在20世纪90年代开始流行，多年来一直是深受喜爱的脑力游戏。我们的在线版本将这个经典游戏带到您的浏览器中，让您随时随地享受游戏乐趣，无需下载或安装任何软件。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Japanese -->
+            <div class="lang-content ja">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">マインスイーパーについて</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        マインスイーパーは、論理的思考と推理能力を試す古典的なパズルゲームです。目的はシンプルで、地雷を爆発させずに地雷原をクリアすることです。数字の付いたマスが提供するヒントを使用して、フィールドを慎重に進み、隠れている地雷にすべて印を付ける必要があります。
+                    </p>
+                    <p>
+                        1990年代にコンピュータゲームとして人気を博したマインスイーパーは、世代を超えて愛される頭脳ゲームであり続けています。オンライン版では、このタイムレスな名作をブラウザで楽しむことができ、ダウンロードやインストールなしで、いつでもどこでもゲームを楽しむことができます。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Play -->
+        <section class="mb-12 max-w-4xl mx-auto">
+            <!-- English -->
+            <div class="lang-content en active">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">How to Play</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">Basic Rules</h3>
+                        <p>Left-click to reveal squares. Numbers show how many mines are adjacent to that square. Right-click to flag suspected mines. Clear all non-mine squares to win!</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">Strategy Tips</h3>
+                        <p>Start with corners and edges where fewer mines can be placed. Use the process of elimination to identify safe squares. Don't guess unless absolutely necessary.</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">Difficulty Levels</h3>
+                        <p>Choose from beginner (9x9 grid, 10 mines), intermediate (16x16 grid, 40 mines), or expert (30x16 grid, 99 mines) to match your skill level.</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">Keyboard Shortcuts</h3>
+                        <p>Use spacebar to reveal squares, or shift + click to flag mines. Press F2 to start a new game when available in some versions.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chinese -->
+            <div class="lang-content zh">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">游戏玩法</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">基本规则</h3>
+                        <p>左键点击揭示方块。数字显示与该方块相邻的地雷数量。右键点击标记可疑的地雷。清除所有非雷方块即可获胜！</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">策略提示</h3>
+                        <p>从角落和边缘开始，那里放置的地雷较少。使用排除法识别安全方块。除非绝对必要，否则不要猜测。</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">难度级别</h3>
+                        <p>选择初级（9x9网格，10个地雷）、中级（16x16网格，40个地雷）或专家级（30x16网格，99个地雷）以匹配您的技能水平。</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">键盘快捷键</h3>
+                        <p>使用空格键揭示方块，或者Shift+点击标记地雷。在某些版本中，按F2开始新游戏。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Japanese -->
+            <div class="lang-content ja">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">遊び方</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">基本ルール</h3>
+                        <p>左クリックでマスを開きます。数字はそのマスに隣接する地雷の数を示しています。右クリックで疑わしい地雷に印を付けます。地雷以外のすべてのマスを開くと勝利です！</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">戦略のヒント</h3>
+                        <p>地雷が少ない角や端から始めましょう。消去法を使って安全なマスを特定します。絶対に必要でない限り、推測は避けましょう。</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">難易度レベル</h3>
+                        <p>初級（9x9グリッド、地雷10個）、中級（16x16グリッド、地雷40個）、上級（30x16グリッド、地雷99個）から選んで、あなたのスキルレベルに合わせましょう。</p>
+                    </div>
+                    <div class="feature-card p-4 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-2">キーボードショートカット</h3>
+                        <p>スペースバーでマスを開いたり、Shift+クリックで地雷に印を付けたりします。一部のバージョンでは、F2キーで新しいゲームを開始できます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Features -->
+        <section class="mb-12 max-w-4xl mx-auto">
+            <!-- English -->
+            <div class="lang-content en active">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">Game Features</h2>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Multiple difficulty levels for beginners and experts</li>
+                    <li>Timer and mine counter to track your progress</li>
+                    <li>Mobile-friendly controls for on-the-go gaming</li>
+                    <li>Clean, intuitive interface inspired by the classic design</li>
+                    <li>No downloads or installations required</li>
+                    <li>Free to play with no registration needed</li>
+                </ul>
+            </div>
+            
+            <!-- Chinese -->
+            <div class="lang-content zh">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">游戏特点</h2>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>为初学者和专家提供多种难度级别</li>
+                    <li>计时器和地雷计数器追踪您的进度</li>
+                    <li>移动设备友好的控制，随时随地玩游戏</li>
+                    <li>灵感来自经典设计的简洁、直观界面</li>
+                    <li>无需下载或安装</li>
+                    <li>免费游戏，无需注册</li>
+                </ul>
+            </div>
+            
+            <!-- Japanese -->
+            <div class="lang-content ja">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">ゲームの特徴</h2>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>初心者から上級者まで複数の難易度レベル</li>
+                    <li>タイマーと地雷カウンターで進捗を追跡</li>
+                    <li>外出先でもプレイできるモバイルフレンドリーな操作</li>
+                    <li>クラシックデザインにインスパイアされた、シンプルで直感的なインターフェース</li>
+                    <li>ダウンロードやインストールは不要</li>
+                    <li>登録なしで無料でプレイ可能</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Game History -->
+        <section class="max-w-4xl mx-auto">
+            <!-- English -->
+            <div class="lang-content en active">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">History of Mine Sweeper</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        The earliest ancestor of Mine Sweeper can be traced back to the 1960s and 1970s with games like "Cube" and "Relentless Logic." However, the version most people are familiar with today was included with Microsoft Windows starting in the 1990s.
+                    </p>
+                    <p class="mb-4">
+                        This simple yet addictive game became an office favorite and time-killing staple for computer users worldwide. It taught millions about logical reasoning and probability while disguised as casual entertainment.
+                    </p>
+                    <p>
+                        Today, Mine Sweeper continues to be developed and reimagined across various platforms, maintaining its status as one of the most recognized and played puzzle games in history.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Chinese -->
+            <div class="lang-content zh">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">扫雷的历史</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        扫雷的最早起源可以追溯到20世纪60年代和70年代的游戏，如"立方体"和"无情逻辑"。然而，如今大多数人熟悉的版本是从20世纪90年代开始随Microsoft Windows一起提供的。
+                    </p>
+                    <p class="mb-4">
+                        这款简单却令人上瘾的游戏成为全球电脑用户在办公室最喜欢的消遣活动。它以休闲娱乐的形式教会了数百万人逻辑推理和概率知识。
+                    </p>
+                    <p>
+                        如今，扫雷继续在各种平台上被开发和重新构想，保持着历史上最受认可和最多人玩的益智游戏之一的地位。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Japanese -->
+            <div class="lang-content ja">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-primary pb-2">マインスイーパーの歴史</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        マインスイーパーの最も古い祖先は、1960年代と1970年代の「キューブ」や「レレントレス・ロジック」などのゲームにまで遡ることができます。しかし、今日多くの人が馴染みのあるバージョンは、1990年代からMicrosoft Windowsに搭載されていたものです。
+                    </p>
+                    <p class="mb-4">
+                        このシンプルながら中毒性のあるゲームは、世界中のコンピューターユーザーにとってオフィスでのお気に入りの暇つぶしとなりました。カジュアルなエンターテイメントを装いながら、何百万人もの人々に論理的思考と確率について教えました。
+                    </p>
+                    <p>
+                        今日、マインスイーパーはさまざまなプラットフォームで開発され、再構築され続け、歴史上最も認知され、プレイされているパズルゲームの一つとしての地位を維持しています。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 px-4 md:px-6 lg:px-8 mt-8">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <!-- English -->
+                    <div class="lang-content en active">
+                        <p>&copy; 2025 bombkeeper.online - All Rights Reserved</p>
+                    </div>
+                    <!-- Chinese -->
+                    <div class="lang-content zh">
+                        <p>&copy; 2025 bombkeeper.online - 保留所有权利</p>
+                    </div>
+                    <!-- Japanese -->
+                    <div class="lang-content ja">
+                        <p>&copy; 2025 bombkeeper.online - 全著作権所有</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <!-- English -->
+                    <div class="lang-content en active">
+                        <a href="#" class="hover:text-gray-300 transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-gray-300 transition mx-4">Terms of Service</a>
+                        <a href="#" class="hover:text-gray-300 transition">Contact</a>
+                    </div>
+                    <!-- Chinese -->
+                    <div class="lang-content zh">
+                        <a href="#" class="hover:text-gray-300 transition">隐私政策</a>
+                        <a href="#" class="hover:text-gray-300 transition mx-4">服务条款</a>
+                        <a href="#" class="hover:text-gray-300 transition">联系我们</a>
+                    </div>
+                    <!-- Japanese -->
+                    <div class="lang-content ja">
+                        <a href="#" class="hover:text-gray-300 transition">プライバシーポリシー</a>
+                        <a href="#" class="hover:text-gray-300 transition mx-4">利用規約</a>
+                        <a href="#" class="hover:text-gray-300 transition">お問い合わせ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 基础JavaScript函数 -->
+    <script>
+        // 页面加载性能追踪
+        const pageLoadStart = Date.now();
+        
+        // 全局缩放比例
+        window.currentScale = 1;
+        
+        // 更新缩放函数，确保在全局范围内可用
+        function updateScale() {
+            const iframe = document.getElementById('game-iframe');
+            if (!iframe) return;
+            
+            iframe.style.transform = `scale(${window.currentScale})`;
+            // 更新iframe容器高度，确保可以滚动查看所有内容
+            const gameFrame = document.querySelector('.game-frame');
+            if (gameFrame && iframe) {
+                const height = iframe.offsetHeight * window.currentScale;
+                if (height > 400) {
+                    gameFrame.style.height = '400px';
+                } else {
+                    gameFrame.style.height = `${height}px`;
+                }
+            }
+        }
+        
+        // 延迟加载iframe
+        function loadGameIframe() {
+            const iframe = document.getElementById('game-iframe');
+            if (!iframe) return;
+            
+            const src = iframe.getAttribute('data-src');
+            if (!src) return;
+            
+            iframe.setAttribute('src', src);
+            
+            // 监听iframe加载完成
+            iframe.onload = function() {
+                // 隐藏加载指示器
+                const loadingIndicator = document.getElementById('loading');
+                if (loadingIndicator) {
+                    loadingIndicator.style.opacity = 0;
+                    setTimeout(() => {
+                        loadingIndicator.style.display = 'none';
+                    }, 500);
+                }
+                
+                // 记录加载时间
+                const loadTime = Date.now() - pageLoadStart;
+                console.log(`Game loaded in ${loadTime}ms`);
+            };
+        }
+    </script>
+    
+    <!-- 语言切换脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 语言切换逻辑
+            function initLanguageSwitcher() {
+                // Add event listeners to language buttons
+                const langButtons = document.querySelectorAll('.lang-button');
+                langButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const lang = this.getAttribute('data-lang');
+                        setLanguage(lang);
+                        
+                        // Update active button
+                        langButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+                
+                // 检测并应用用户之前的语言选择
+                const savedLanguage = localStorage.getItem('preferred_language');
+                if (savedLanguage) {
+                    setLanguage(savedLanguage);
+                    
+                    // 更新激活的语言按钮
+                    langButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-lang') === savedLanguage) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // Function to set the language
+            function setLanguage(lang) {
+                // Update HTML lang attribute
+                document.documentElement.lang = lang;
+                
+                // Hide all language elements
+                document.querySelectorAll('.lang-content').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // Show elements for the selected language
+                document.querySelectorAll(`.lang-content.${lang}`).forEach(el => {
+                    el.classList.add('active');
+                    
+                    // 确保灵活布局保持一致
+                    if (el.classList.contains('flex')) {
+                        el.style.display = 'flex';
+                    }
+                });
+                
+                // 存储语言选择，以便下次访问时保持
+                localStorage.setItem('preferred_language', lang);
+            }
+            
+            // 初始化语言切换功能
+            initLanguageSwitcher();
+            
+            // 检查语言元素激活状态
+            function checkLanguageActivation() {
+                const lang = document.documentElement.lang || 'en';
+                console.log('Current language:', lang);
+                
+                const allLangContent = document.querySelectorAll('.lang-content');
+                console.log('Total language elements:', allLangContent.length);
+                
+                const activeLangContent = document.querySelectorAll(`.lang-content.active`);
+                console.log('Active language elements:', activeLangContent.length);
+                
+                const wrongActiveLangContent = document.querySelectorAll(`.lang-content.active:not(.${lang})`);
+                console.log('Incorrect active elements:', wrongActiveLangContent.length);
+                
+                if (wrongActiveLangContent.length > 0) {
+                    console.warn('Found incorrect language elements activated:', 
+                        Array.from(wrongActiveLangContent).map(el => el.textContent.trim().substring(0, 20)));
+                }
+            }
+            
+            // 在语言切换后检查
+            document.querySelectorAll('.lang-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(checkLanguageActivation, 100);
+                });
+            });
+            
+            // 页面加载完成后检查
+            setTimeout(checkLanguageActivation, 1000);
+            
+            // 初始化移动端控制
+            initMobileControls();
+            
+            // 初始化页面加载
+            initPageLoading();
+        });
+        
+        // 移动端控制逻辑
+        function initMobileControls() {
+            const gameFrame = document.querySelector('.game-frame iframe');
+            const revealButtons = document.querySelectorAll('.reveal-btn');
+            const flagButtons = document.querySelectorAll('.flag-btn');
+            
+            // 缩放控制
+            const zoomControls = document.querySelector('.game-zoom-controls');
+            const zoomOutBtns = document.querySelectorAll('.zoom-out');
+            const zoomInBtns = document.querySelectorAll('.zoom-in');
+            const zoomResetBtns = document.querySelectorAll('.zoom-reset');
+            
+            // 当前操作模式 (reveal 或 flag)
+            let currentMode = 'reveal';
+            
+            // 设置所有翻开按钮的激活状态
+            function setRevealActive() {
+                revealButtons.forEach(btn => {
+                    btn.classList.add('active');
+                    btn.style.backgroundColor = 'var(--accent-color)';
+                });
+                
+                flagButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.backgroundColor = 'var(--primary-color)';
+                });
+                
+                currentMode = 'reveal';
+            }
+            
+            // 设置所有标记按钮的激活状态
+            function setFlagActive() {
+                flagButtons.forEach(btn => {
+                    btn.classList.add('active');
+                    btn.style.backgroundColor = 'var(--accent-color)';
+                });
+                
+                revealButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.backgroundColor = 'var(--primary-color)';
+                });
+                
+                currentMode = 'flag';
+            }
+            
+            // 为翻开按钮添加事件监听
+            revealButtons.forEach(btn => {
+                btn?.addEventListener('click', () => {
+                    setRevealActive();
+                });
+            });
+            
+            // 为标记按钮添加事件监听
+            flagButtons.forEach(btn => {
+                btn?.addEventListener('click', () => {
+                    setFlagActive();
+                });
+            });
+            
+            // 为缩放按钮添加事件监听
+            zoomOutBtns.forEach(btn => {
+                btn?.addEventListener('click', () => {
+                    if (window.currentScale > 0.5) {
+                        window.currentScale -= 0.1;
+                        updateScale();
+                    }
+                });
+            });
+            
+            zoomInBtns.forEach(btn => {
+                btn?.addEventListener('click', () => {
+                    if (window.currentScale < 2) {
+                        window.currentScale += 0.1;
+                        updateScale();
+                    }
+                });
+            });
+            
+            zoomResetBtns.forEach(btn => {
+                btn?.addEventListener('click', () => {
+                    window.currentScale = 1;
+                    updateScale();
+                });
+            });
+            
+            // 默认激活翻开模式
+            setRevealActive();
+            
+            // 检测设备类型并应用相应优化
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // 在移动设备上自动滚动到游戏区域
+                const playButton = document.querySelector('.button');
+                if (playButton) {
+                    playButton.addEventListener('click', () => {
+                        setTimeout(() => {
+                            const gameFrameElement = document.querySelector('.game-frame');
+                            if (gameFrameElement) {
+                                gameFrameElement.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }, 300);
+                    });
+                }
+                
+                // 优化触摸延迟
+                document.querySelectorAll('button, a').forEach(el => {
+                    el.style.touchAction = 'manipulation';
+                });
+            }
+        }
+        
+        // 页面加载功能初始化
+        function initPageLoading() {
+            // 检测连接速度
+            setTimeout(() => {
+                // 如果2秒后页面仍在加载，则显示慢速连接提示
+                const loadingElement = document.getElementById('loading');
+                if (loadingElement && loadingElement.style.display !== 'none') {
+                    const loadingText = document.querySelector('.loading-text');
+                    if (loadingText) {
+                        const slowConnectionEn = document.createElement('div');
+                        slowConnectionEn.classList.add('text-sm', 'mt-2', 'lang-content', 'en', 'active');
+                        slowConnectionEn.textContent = 'Slow connection detected. Please wait...';
+                        
+                        const slowConnectionZh = document.createElement('div');
+                        slowConnectionZh.classList.add('text-sm', 'mt-2', 'lang-content', 'zh');
+                        slowConnectionZh.textContent = '检测到网络连接较慢，请稍候...';
+                        
+                        const slowConnectionJa = document.createElement('div');
+                        slowConnectionJa.classList.add('text-sm', 'mt-2', 'lang-content', 'ja');
+                        slowConnectionJa.textContent = '接続が遅いことが検出されました。お待ちください...';
+                        
+                        loadingText.appendChild(slowConnectionEn);
+                        loadingText.appendChild(slowConnectionZh);
+                        loadingText.appendChild(slowConnectionJa);
+                    }
+                }
+            }, 2000);
+            
+            // 延迟加载iframe，优先加载页面的其他部分
+            setTimeout(loadGameIframe, 500);
+        }
+    </script>
+    
+    <!-- 触摸控制脚本 -->
+    <script>
+        // 移动端触摸手势控制
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameFrame = document.querySelector('.game-frame');
+            if (!gameFrame) return;
+            
+            let startX, startY, initialPinchDistance;
+            let lastScale = 1;
+            let isDragging = false;
+            
+            // 触摸开始
+            gameFrame.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 2) {
+                    // 捏合手势开始
+                    e.preventDefault();
+                    
+                    // 计算两个触摸点之间的距离
+                    const dist = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
+                    initialPinchDistance = dist;
+                    lastScale = window.currentScale || 1;
+                } else if (e.touches.length === 1) {
+                    // 单指拖动开始
+                    startX = e.touches[0].pageX;
+                    startY = e.touches[0].pageY;
+                    isDragging = true;
+                }
+            }, { passive: false });
+            
+            // 触摸移动
+            gameFrame.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 2) {
+                    // 捏合手势移动（缩放）
+                    e.preventDefault();
+                    
+                    // 计算当前两个触摸点之间的距离
+                    const dist = Math.hypot(
+                        e.touches[0].pageX - e.touches[1].pageX,
+                        e.touches[0].pageY - e.touches[1].pageY
+                    );
+                    
+                    // 计算缩放比例变化
+                    let newScale = lastScale * (dist / initialPinchDistance);
+                    
+                    // 限制缩放范围
+                    newScale = Math.min(Math.max(0.5, newScale), 2);
+                    
+                    // 应用缩放
+                    if (typeof updateScale === 'function') {
+                        window.currentScale = newScale;
+                        updateScale();
+                    }
+                } else if (e.touches.length === 1 && isDragging) {
+                    // 单指拖动（滚动）
+                    const x = e.touches[0].pageX;
+                    const y = e.touches[0].pageY;
+                    
+                    // 计算拖动距离
+                    const deltaX = x - startX;
+                    const deltaY = y - startY;
+                    
+                    // 应用滚动
+                    gameFrame.scrollLeft -= deltaX;
+                    gameFrame.scrollTop -= deltaY;
+                    
+                    // 更新起始位置
+                    startX = x;
+                    startY = y;
+                }
+            }, { passive: false });
+            
+            // 触摸结束
+            gameFrame.addEventListener('touchend', function() {
+                isDragging = false;
+            });
+        });
+        
+        // 禁止在游戏区域内的橡皮筋效果
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.game-frame') && e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+    
+    <!-- 性能优化脚本 -->
+    <script>
+        // 页面完全加载后执行
+        window.addEventListener('load', function() {
+            // 记录页面加载完成时间
+            const fullLoadTime = Date.now() - pageLoadStart;
+            console.log(`Page fully loaded in ${fullLoadTime}ms`);
+            
+            // 检测是否为低端设备
+            const isLowEndDevice = 
+                (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) || 
+                (navigator.deviceMemory && navigator.deviceMemory <= 2) || 
+                (window.performance && window.performance.memory && window.performance.memory.jsHeapSizeLimit < 500000000);
+                
+            if (isLowEndDevice) {
+                // 为低端设备禁用一些动画效果
+                document.querySelectorAll('.feature-card').forEach(card => {
+                    card.style.transition = 'none';
+                });
+                
+                // 使用更简单的hover效果
+                const style = document.createElement('style');
+                style.textContent = `
+                    .button:hover, .button:active {
+                        background-color: var(--secondary-color);
+                        transform: none;
+                    }
+                    .feature-card:hover, .feature-card:active {
+                        transform: none;
+                        box-shadow: none;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    </script>
+</body>
+</html>
