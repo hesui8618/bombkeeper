@@ -1,234 +1,957 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N8SVLKY816"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-N8SVLKY816');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Play the best online games for free. Arcade games, strategy games, puzzle games and more.">
-    <title>GameHub - Play Free Online Games</title>
-    <link rel="canonical" href="https://gamehub.example.com/" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        apple: {
-                            blue: '#007AFF',
-                            green: '#34C759',
-                            indigo: '#5856D6',
-                            orange: '#FF9500',
-                            pink: '#FF2D55',
-                            purple: '#AF52DE',
-                            red: '#FF3B30',
-                            teal: '#5AC8FA',
-                            yellow: '#FFCC00',
-                            gray: '#8E8E93',
-                            lightgray: '#E5E5EA'
-                        }
-                    }
-                }
+    <title>bombkeeper - 精品在线游戏平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 语言切换按钮 */
+        .language-switcher {
+            position: relative;
+        }
+
+        .language-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .language-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .language-option {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+
+        .language-option:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .language-option:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .language-option.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .language-option.active:hover {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 欢迎区域 */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        /* 游戏分类网格 */
+        .categories-section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* 游戏内容区域 */
+        .game-content {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .game-content.active {
+            display: block;
+        }
+
+        .content-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .content-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .game-iframe-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+        }
+
+        /* 游戏列表 */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .game-card h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .game-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .nav-right {
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-iframe {
+                height: 400px;
             }
         }
-    </script>
-    <link rel="stylesheet" href="css/style.css">
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <!-- Language Selector -->
-    <div class="bg-gray-100 dark:bg-gray-800 text-sm py-1">
-        <div class="container mx-auto px-4 flex justify-end">
-            <div class="relative inline-block text-left" id="language-selector">
-                <button type="button" class="flex items-center text-gray-700 dark:text-gray-300 hover:text-apple-blue" id="language-menu-button" aria-expanded="false" aria-haspopup="true">
-                    <span class="mr-1">🌐</span>
-                    <span id="current-language">English</span>
-                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-                <div class="hidden origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none z-10" id="language-menu" role="menu" aria-orientation="vertical" aria-labelledby="language-menu-button" tabindex="-1">
-                    <div class="py-1" role="none">
-                        <a href="#" class="text-gray-700 dark:text-gray-300 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem" data-lang="en">English</a>
-                        <a href="#" class="text-gray-700 dark:text-gray-300 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem" data-lang="zh">中文</a>
-                        <a href="#" class="text-gray-700 dark:text-gray-300 block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem" data-lang="ja">日本語</a>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" data-lang-key="logo">🎮 bombkeeper</div>
+            <div class="nav-right">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showHome()" data-lang-key="nav-home">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showCategory('action')" data-lang-key="nav-action">动作游戏</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showCategory('puzzle')" data-lang-key="nav-puzzle">益智游戏</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showCategory('strategy')" data-lang-key="nav-strategy">策略游戏</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showCategory('casual')" data-lang-key="nav-casual">休闲游戏</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showCategory('rpg')" data-lang-key="nav-rpg">角色扮演</a>
+                    </li>
+                </ul>
+                <div class="language-switcher">
+                    <button class="language-btn" onclick="toggleLanguageDropdown()">
+                        <span id="current-language">中文</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="language-dropdown" id="language-dropdown">
+                        <div class="language-option active" onclick="changeLanguage('zh-CN')">
+                            <span>🇨🇳</span>
+                            <span>中文</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en-US')">
+                            <span>🇺🇸</span>
+                            <span>English</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Header -->
-    <header class="bg-apple-blue text-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between">
-            <div class="flex items-center mb-2 md:mb-0">
-                <a href="index.html" class="text-2xl font-bold">GameHub</a>
-            </div>
-            <nav class="flex flex-wrap justify-center">
-                <a href="index.html" class="px-3 py-2 hover:text-apple-yellow">Home</a>
-                <a href="pages/categories.html" class="px-3 py-2 hover:text-apple-yellow">Categories</a>
-                <a href="pages/popular.html" class="px-3 py-2 hover:text-apple-yellow">Popular Games</a>
-                <a href="pages/about.html" class="px-3 py-2 hover:text-apple-yellow">About</a>
-                <a href="pages/contact.html" class="px-3 py-2 hover:text-apple-yellow">Contact</a>
-            </nav>
-        </div>
-    </header>
+    <!-- 主内容 -->
+    <main class="main-content">
+        <!-- 首页内容 -->
+        <div id="home-content">
+            <!-- 欢迎区域 -->
+            <section class="hero-section">
+                <h1 class="hero-title" data-lang-key="hero-title">欢迎来到bombkeeper</h1>
+                <p class="hero-subtitle" data-lang-key="hero-subtitle">探索精彩纷呈的在线游戏世界，享受无限乐趣！</p>
+            </section>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-apple-blue to-apple-purple text-white py-16">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-6">Welcome to GameHub - Play Free Online Games</h1>
-            <p class="text-xl mb-8">Your destination for the best free online games. Hours of fun for players of all ages.</p>
-            <a href="pages/categories.html" class="bg-apple-green hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-lg inline-block transition duration-300">Browse Games</a>
-        </div>
-    </section>
-
-    <!-- Featured Games -->
-    <section class="py-12 bg-gray-50 dark:bg-gray-800">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Featured Games</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                <!-- Game Card 1 - Mine Sweeper -->                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">                    <div class="h-48 bg-white flex items-center justify-center overflow-hidden">                        <img src="https://i.imgur.com/qVbqDbp.png" alt="Mine Sweeper" class="w-full h-full object-cover">                    </div>                    <div class="p-6">                        <h3 class="font-bold text-xl mb-2">Mine Sweeper</h3>                        <p class="text-gray-600 dark:text-gray-300 mb-4">Test your logic with this classic puzzle game. Clear the minefield without triggering any explosives!</p>                        <a href="pages/minesweeper.html" class="text-apple-blue hover:underline font-medium">Play Now</a>                    </div>                </div>
-                
-                <!-- Game Card 2 -->
-                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-                    <div class="h-48 bg-apple-lightgray flex items-center justify-center">
-                        <span class="text-apple-gray text-lg">Game Preview</span>
+            <!-- 游戏分类 -->
+            <section class="categories-section">
+                <h2 class="section-title" data-lang-key="categories-title">🎯 游戏分类</h2>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="showCategory('action')">
+                        <div class="category-icon">⚔️</div>
+                        <h3 class="category-title" data-lang-key="action-title">动作游戏</h3>
+                        <p class="category-desc" data-lang-key="action-desc">刺激的战斗与冒险等你来挑战</p>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-xl mb-2">Puzzle Master</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">Challenge your brain with hundreds of mind-bending puzzles that will keep you engaged for hours.</p>
-                        <a href="#" class="text-apple-blue hover:underline font-medium">Play Now</a>
+                    <div class="category-card" onclick="showCategory('puzzle')">
+                        <div class="category-icon">🧩</div>
+                        <h3 class="category-title" data-lang-key="puzzle-title">益智游戏</h3>
+                        <p class="category-desc" data-lang-key="puzzle-desc">锻炼大脑，挑战智力极限</p>
                     </div>
-                </div>
-                
-                <!-- Game Card 3 -->
-                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-                    <div class="h-48 bg-apple-lightgray flex items-center justify-center">
-                        <span class="text-apple-gray text-lg">Game Preview</span>
+                    <div class="category-card" onclick="showCategory('strategy')">
+                        <div class="category-icon">🏰</div>
+                        <h3 class="category-title" data-lang-key="strategy-title">策略游戏</h3>
+                        <p class="category-desc" data-lang-key="strategy-desc">运筹帷幄，决胜千里</p>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-xl mb-2">Strategy Kingdom</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">Build your empire, train your army, and conquer the world in this strategic masterpiece.</p>
-                        <a href="#" class="text-apple-blue hover:underline font-medium">Play Now</a>
+                    <div class="category-card" onclick="showCategory('casual')">
+                        <div class="category-icon">🎈</div>
+                        <h3 class="category-title" data-lang-key="casual-title">休闲游戏</h3>
+                        <p class="category-desc" data-lang-key="casual-desc">轻松娱乐，放松身心</p>
+                    </div>
+                    <div class="category-card" onclick="showCategory('rpg')">
+                        <div class="category-icon">🗡️</div>
+                        <h3 class="category-title" data-lang-key="rpg-title">角色扮演</h3>
+                        <p class="category-desc" data-lang-key="rpg-desc">沉浸式体验，成为传奇英雄</p>
+                    </div>
+                    <div class="category-card" onclick="showCategory('racing')">
+                        <div class="category-icon">🏎️</div>
+                        <h3 class="category-title" data-lang-key="racing-title">竞速游戏</h3>
+                        <p class="category-desc" data-lang-key="racing-desc">速度与激情的完美结合</p>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
-    </section>
 
-    <!-- Categories Section -->
-    <section class="py-12">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Game Categories</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <a href="#" class="bg-apple-red text-white rounded-lg p-4 text-center hover:opacity-90 transition">Action</a>
-                <a href="#" class="bg-apple-blue text-white rounded-lg p-4 text-center hover:opacity-90 transition">Adventure</a>
-                <a href="#" class="bg-apple-green text-white rounded-lg p-4 text-center hover:opacity-90 transition">Puzzle</a>
-                <a href="#" class="bg-apple-purple text-white rounded-lg p-4 text-center hover:opacity-90 transition">Strategy</a>
-                <a href="#" class="bg-apple-orange text-white rounded-lg p-4 text-center hover:opacity-90 transition">Sports</a>
-                <a href="#" class="bg-apple-teal text-white rounded-lg p-4 text-center hover:opacity-90 transition">Racing</a>
+        <!-- 游戏内容页面 -->
+        <div id="game-content" class="game-content">
+            <button class="back-button" onclick="showHome()" data-lang-key="back-button">← 返回首页</button>
+            <div class="content-header">
+                <h2 class="content-title" id="category-title">游戏分类</h2>
+                <p id="category-description" data-lang-key="select-game">选择您喜欢的游戏开始游玩</p>
+            </div>
+            
+            <!-- 游戏列表 -->
+            <div class="games-grid" id="games-list">
+                <!-- 游戏卡片将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- iframe容器 -->
+            <div class="game-iframe-container" id="iframe-container" style="display: none;">
+                <iframe id="game-iframe" class="game-iframe" src=""></iframe>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Why Choose Us -->
-    <section class="py-12 bg-gray-50 dark:bg-gray-800">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Why Choose GameHub</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-apple-blue flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Fast & Smooth</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Optimized gaming experience with fast loading times and smooth gameplay.</p>
-                </div>
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-apple-green flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">100% Safe</h3>
-                    <p class="text-gray-600 dark:text-gray-300">All games are family-friendly and safe for players of all ages.</p>
-                </div>
-                <div class="text-center p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-apple-purple flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Regular Updates</h3>
-                    <p class="text-gray-600 dark:text-gray-300">New games added weekly to keep your gaming experience fresh and exciting.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script>
+        // 多语言文本数据
+        const translations = {
+            'zh-CN': {
+                'logo': '🎮 bombkeeper',
+                'nav-home': '首页',
+                'nav-action': '动作游戏',
+                'nav-puzzle': '益智游戏',
+                'nav-strategy': '策略游戏',
+                'nav-casual': '休闲游戏',
+                'nav-rpg': '角色扮演',
+                'hero-title': '欢迎来到bombkeeper',
+                'hero-subtitle': '探索精彩纷呈的在线游戏世界，享受无限乐趣！',
+                'categories-title': '🎯 游戏分类',
+                'action-title': '动作游戏',
+                'action-desc': '刺激的战斗与冒险等你来挑战',
+                'puzzle-title': '益智游戏',
+                'puzzle-desc': '锻炼大脑，挑战智力极限',
+                'strategy-title': '策略游戏',
+                'strategy-desc': '运筹帷幄，决胜千里',
+                'casual-title': '休闲游戏',
+                'casual-desc': '轻松娱乐，放松身心',
+                'rpg-title': '角色扮演',
+                'rpg-desc': '沉浸式体验，成为传奇英雄',
+                'racing-title': '竞速游戏',
+                'racing-desc': '速度与激情的完美结合',
+                'back-button': '← 返回首页',
+                'select-game': '选择您喜欢的游戏开始游玩'
+            },
+            'en-US': {
+                'logo': '🎮 bombkeeper',
+                'nav-home': 'Home',
+                'nav-action': 'Action',
+                'nav-puzzle': 'Puzzle',
+                'nav-strategy': 'Strategy',
+                'nav-casual': 'Casual',
+                'nav-rpg': 'RPG',
+                'hero-title': 'Welcome to bombkeeper',
+                'hero-subtitle': 'Explore the wonderful world of online games and enjoy unlimited fun!',
+                'categories-title': '🎯 Game Categories',
+                'action-title': 'Action Games',
+                'action-desc': 'Exciting battles and adventures await your challenge',
+                'puzzle-title': 'Puzzle Games',
+                'puzzle-desc': 'Exercise your brain and challenge your intelligence',
+                'strategy-title': 'Strategy Games',
+                'strategy-desc': 'Plan strategies and win battles',
+                'casual-title': 'Casual Games',
+                'casual-desc': 'Relax and enjoy entertainment',
+                'rpg-title': 'Role Playing',
+                'rpg-desc': 'Immersive experience, become a legendary hero',
+                'racing-title': 'Racing Games',
+                'racing-desc': 'Perfect combination of speed and passion',
+                'back-button': '← Back to Home',
+                'select-game': 'Choose your favorite game to start playing'
+            }
+        };
 
-    <!-- Footer -->
-    <footer class="bg-apple-blue text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">GameHub</h3>
-                    <p class="mb-4">Your ultimate destination for free online games. Play anytime, anywhere.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                    <ul>
-                        <li class="mb-2"><a href="index.html" class="hover:text-apple-yellow">Home</a></li>
-                        <li class="mb-2"><a href="pages/categories.html" class="hover:text-apple-yellow">Categories</a></li>
-                        <li class="mb-2"><a href="pages/popular.html" class="hover:text-apple-yellow">Popular Games</a></li>
-                        <li class="mb-2"><a href="pages/about.html" class="hover:text-apple-yellow">About</a></li>
-                        <li><a href="pages/contact.html" class="hover:text-apple-yellow">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Categories</h3>
-                    <ul>
-                        <li class="mb-2"><a href="#" class="hover:text-apple-yellow">Action</a></li>
-                        <li class="mb-2"><a href="#" class="hover:text-apple-yellow">Adventure</a></li>
-                        <li class="mb-2"><a href="#" class="hover:text-apple-yellow">Puzzle</a></li>
-                        <li class="mb-2"><a href="#" class="hover:text-apple-yellow">Strategy</a></li>
-                        <li><a href="#" class="hover:text-apple-yellow">Sports</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Connect With Us</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-apple-yellow">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        <a href="#" class="hover:text-apple-yellow">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        <a href="#" class="hover:text-apple-yellow">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-                <p>&copy; 2023 GameHub. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        // 当前语言
+        let currentLanguage = 'zh-CN';
 
-    <script src="js/main.js"></script>
+        // 游戏数据
+        const gameData = {
+            action: {
+                title: {
+                    'zh-CN': "⚔️ 动作游戏",
+                    'en-US': "⚔️ Action Games"
+                },
+                description: {
+                    'zh-CN': "体验刺激的战斗与冒险",
+                    'en-US': "Experience exciting battles and adventures"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "魂斗罗", 'en-US': "Contra" }, 
+                        desc: { 'zh-CN': "经典的横版射击游戏", 'en-US': "Classic side-scrolling shooter" }, 
+                        url: "https://8090game.com/play/663e275b4b66e08a3b3e10a4" 
+                    },
+                    { 
+                        name: { 'zh-CN': "超级玛丽", 'en-US': "Super Mario" }, 
+                        desc: { 'zh-CN': "经典的横版闯关游戏", 'en-US': "Classic side-scrolling platformer" }, 
+                        url: "https://supermario-game.com" 
+                    },
+                    { 
+                        name: { 'zh-CN': "忍者切水果", 'en-US': "Fruit Ninja" }, 
+                        desc: { 'zh-CN': "考验反应速度的切水果游戏", 'en-US': "Test your reflexes with fruit slicing" }, 
+                        url: "https://www.crazygames.com/game/fruit-ninja" 
+                    },
+                    { 
+                        name: { 'zh-CN': "坦克大战", 'en-US': "Tank Battle" }, 
+                        desc: { 'zh-CN': "经典的坦克对战游戏", 'en-US': "Classic tank combat game" }, 
+                        url: "https://www.crazygames.com/game/tank-trouble" 
+                    },
+                    { 
+                        name: { 'zh-CN': "太空射击", 'en-US': "Space Shooter" }, 
+                        desc: { 'zh-CN': "在太空中消灭敌人", 'en-US': "Eliminate enemies in space" }, 
+                        url: "https://www.crazygames.com/game/space-invaders" 
+                    }
+                ]
+            },
+            puzzle: {
+                title: {
+                    'zh-CN': "🧩 益智游戏",
+                    'en-US': "🧩 Puzzle Games"
+                },
+                description: {
+                    'zh-CN': "锻炼大脑，挑战智力",
+                    'en-US': "Exercise your brain and challenge your intelligence"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "扫雷", 'en-US': "Minesweeper" }, 
+                        desc: { 'zh-CN': "经典的逻辑推理游戏", 'en-US': "Classic logic puzzle game" }, 
+                        url: "https://ohminesweeper.online/" 
+                    },
+                    { 
+                        name: { 'zh-CN': "俄罗斯方块", 'en-US': "Tetris" }, 
+                        desc: { 'zh-CN': "经典的方块消除游戏", 'en-US': "Classic block-clearing game" }, 
+                        url: "https://tetris.com/play-tetris" 
+                    },
+                    { 
+                        name: { 'zh-CN': "数独游戏", 'en-US': "Sudoku" }, 
+                        desc: { 'zh-CN': "数字逻辑推理游戏", 'en-US': "Number logic puzzle game" }, 
+                        url: "https://sudoku.com" 
+                    },
+                    { 
+                        name: { 'zh-CN': "2048", 'en-US': "2048" }, 
+                        desc: { 'zh-CN': "数字合并益智游戏", 'en-US': "Number merging puzzle game" }, 
+                        url: "https://play2048.co" 
+                    },
+                    { 
+                        name: { 'zh-CN': "连连看", 'en-US': "Mahjong Connect" }, 
+                        desc: { 'zh-CN': "图案配对消除游戏", 'en-US': "Pattern matching game" }, 
+                        url: "https://www.crazygames.com/game/mahjong-connect" 
+                    }
+                ]
+            },
+            strategy: {
+                title: {
+                    'zh-CN': "🏰 策略游戏",
+                    'en-US': "🏰 Strategy Games"
+                },
+                description: {
+                    'zh-CN': "运筹帷幄，制定战略",
+                    'en-US': "Plan strategies and make tactical decisions"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "国际象棋", 'en-US': "Chess" }, 
+                        desc: { 'zh-CN': "经典的策略对弈游戏", 'en-US': "Classic strategic board game" }, 
+                        url: "https://www.chess.com" 
+                    },
+                    { 
+                        name: { 'zh-CN': "塔防游戏", 'en-US': "Tower Defense" }, 
+                        desc: { 'zh-CN': "建造防御塔抵御敌人", 'en-US': "Build towers to defend against enemies" }, 
+                        url: "https://www.crazygames.com/game/bloons-td-6" 
+                    },
+                    { 
+                        name: { 'zh-CN': "围棋", 'en-US': "Go" }, 
+                        desc: { 'zh-CN': "古老的策略棋类游戏", 'en-US': "Ancient strategic board game" }, 
+                        url: "https://online-go.com" 
+                    },
+                    { 
+                        name: { 'zh-CN': "帝国时代", 'en-US': "Age of Empires" }, 
+                        desc: { 'zh-CN': "建立你的文明帝国", 'en-US': "Build your civilization empire" }, 
+                        url: "https://www.crazygames.com/game/age-of-war" 
+                    }
+                ]
+            },
+            casual: {
+                title: {
+                    'zh-CN': "🎈 休闲游戏",
+                    'en-US': "🎈 Casual Games"
+                },
+                description: {
+                    'zh-CN': "轻松娱乐，放松心情",
+                    'en-US': "Relax and enjoy entertainment"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "愤怒的小鸟", 'en-US': "Angry Birds" }, 
+                        desc: { 'zh-CN': "用弹弓射击绿猪", 'en-US': "Use slingshot to shoot green pigs" }, 
+                        url: "https://www.crazygames.com/game/angry-birds" 
+                    },
+                    { 
+                        name: { 'zh-CN': "贪吃蛇", 'en-US': "Snake" }, 
+                        desc: { 'zh-CN': "控制蛇吃食物变长", 'en-US': "Control snake to eat food and grow" }, 
+                        url: "https://www.crazygames.com/game/snake" 
+                    },
+                    { 
+                        name: { 'zh-CN': "泡泡龙", 'en-US': "Bubble Shooter" }, 
+                        desc: { 'zh-CN': "射击消除彩色泡泡", 'en-US': "Shoot and pop colorful bubbles" }, 
+                        url: "https://www.crazygames.com/game/bubble-shooter" 
+                    },
+                    { 
+                        name: { 'zh-CN': "消消乐", 'en-US': "Candy Crush" }, 
+                        desc: { 'zh-CN': "三消类休闲游戏", 'en-US': "Match-3 casual game" }, 
+                        url: "https://www.crazygames.com/game/candy-crush" 
+                    }
+                ]
+            },
+            rpg: {
+                title: {
+                    'zh-CN': "🗡️ 角色扮演",
+                    'en-US': "🗡️ Role Playing"
+                },
+                description: {
+                    'zh-CN': "扮演角色，体验冒险",
+                    'en-US': "Play roles and experience adventures"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "勇者斗恶龙", 'en-US': "Dragon Quest" }, 
+                        desc: { 'zh-CN': "经典的RPG冒险游戏", 'en-US': "Classic RPG adventure game" }, 
+                        url: "https://www.crazygames.com/game/dragon-quest" 
+                    },
+                    { 
+                        name: { 'zh-CN': "魔法师传奇", 'en-US': "Wizard Legend" }, 
+                        desc: { 'zh-CN': "使用魔法战胜敌人", 'en-US': "Use magic to defeat enemies" }, 
+                        url: "https://www.crazygames.com/game/wizard-101" 
+                    },
+                    { 
+                        name: { 'zh-CN': "骑士冒险", 'en-US': "Knight Adventure" }, 
+                        desc: { 'zh-CN': "成为勇敢的骑士", 'en-US': "Become a brave knight" }, 
+                        url: "https://www.crazygames.com/game/knight-adventure" 
+                    },
+                    { 
+                        name: { 'zh-CN': "精灵物语", 'en-US': "Pokemon Story" }, 
+                        desc: { 'zh-CN': "与精灵一起冒险", 'en-US': "Adventure with pokemon" }, 
+                        url: "https://www.crazygames.com/game/pokemon" 
+                    }
+                ]
+            },
+            racing: {
+                title: {
+                    'zh-CN': "🏎️ 竞速游戏",
+                    'en-US': "🏎️ Racing Games"
+                },
+                description: {
+                    'zh-CN': "速度与激情的体验",
+                    'en-US': "Experience speed and passion"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "极速赛车", 'en-US': "Speed Racing" }, 
+                        desc: { 'zh-CN': "在赛道上飞驰", 'en-US': "Race on the track" }, 
+                        url: "https://www.crazygames.com/game/racing-car" 
+                    },
+                    { 
+                        name: { 'zh-CN': "摩托车竞速", 'en-US': "Moto Racing" }, 
+                        desc: { 'zh-CN': "驾驶摩托车比赛", 'en-US': "Drive motorcycle racing" }, 
+                        url: "https://www.crazygames.com/game/moto-x3m" 
+                    },
+                    { 
+                        name: { 'zh-CN': "卡丁车", 'en-US': "Go Kart" }, 
+                        desc: { 'zh-CN': "有趣的卡丁车比赛", 'en-US': "Fun go-kart racing" }, 
+                        url: "https://www.crazygames.com/game/go-kart" 
+                    },
+                    { 
+                        name: { 'zh-CN': "飞机竞速", 'en-US': "Air Race" }, 
+                        desc: { 'zh-CN': "在天空中竞速", 'en-US': "Race in the sky" }, 
+                        url: "https://www.crazygames.com/game/air-race" 
+                    }
+                ]
+            }
+        };
+
+        // 语言切换功能
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // 切换语言
+        function changeLanguage(language) {
+            currentLanguage = language;
+            
+            // 更新当前语言显示
+            const currentLangSpan = document.getElementById('current-language');
+            currentLangSpan.textContent = language === 'zh-CN' ? '中文' : 'English';
+            
+            // 更新语言选项的激活状态
+            const options = document.querySelectorAll('.language-option');
+            options.forEach(option => {
+                option.classList.remove('active');
+                if ((language === 'zh-CN' && option.textContent.includes('中文')) ||
+                    (language === 'en-US' && option.textContent.includes('English'))) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // 更新页面文本
+            updatePageText();
+            
+            // 隐藏下拉菜单
+            document.getElementById('language-dropdown').classList.remove('show');
+            
+            // 保存语言选择到本地存储
+            localStorage.setItem('preferred-language', language);
+        }
+
+        // 更新页面文本
+        function updatePageText() {
+            const elements = document.querySelectorAll('[data-lang-key]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        // 显示首页
+        function showHome() {
+            document.getElementById('home-content').style.display = 'block';
+            document.getElementById('game-content').classList.remove('active');
+            document.getElementById('iframe-container').style.display = 'none';
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 显示游戏分类
+        function showCategory(category) {
+            const data = gameData[category];
+            if (!data) return;
+
+            // 隐藏首页，显示游戏内容
+            document.getElementById('home-content').style.display = 'none';
+            document.getElementById('game-content').classList.add('active');
+            document.getElementById('iframe-container').style.display = 'none';
+
+            // 更新标题和描述
+            document.getElementById('category-title').textContent = data.title[currentLanguage];
+            document.getElementById('category-description').textContent = data.description[currentLanguage];
+
+            // 生成游戏列表
+            const gamesList = document.getElementById('games-list');
+            gamesList.innerHTML = '';
+            
+            data.games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card fade-in';
+                gameCard.innerHTML = `
+                    <h3>${game.name[currentLanguage]}</h3>
+                    <p>${game.desc[currentLanguage]}</p>
+                `;
+                gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage]);
+                gamesList.appendChild(gameCard);
+            });
+
+            // 滚动到顶部
+            window.scrollTo({ top: 80, behavior: 'smooth' });
+        }
+
+        // 加载游戏
+        function loadGame(url, name) {
+            const iframe = document.getElementById('game-iframe');
+            const container = document.getElementById('iframe-container');
+            const gamesList = document.getElementById('games-list');
+            
+            // 显示加载状态
+            iframe.src = '';
+            container.style.display = 'block';
+            gamesList.style.display = 'none';
+            
+            // 更新标题
+            const title = document.getElementById('category-title');
+            title.innerHTML = `🎮 ${name} <span class="loading"></span>`;
+            
+            // 加载游戏
+            setTimeout(() => {
+                iframe.src = url;
+                title.textContent = `🎮 ${name}`;
+            }, 500);
+            
+            // 滚动到iframe
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 600);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从本地存储恢复语言设置
+            const savedLanguage = localStorage.getItem('preferred-language');
+            if (savedLanguage && translations[savedLanguage]) {
+                changeLanguage(savedLanguage);
+            }
+            
+            showHome();
+            
+            // 添加滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = 'none';
+                }
+            });
+            
+            // 点击外部关闭语言下拉菜单
+            document.addEventListener('click', function(e) {
+                const languageSwitcher = document.querySelector('.language-switcher');
+                if (!languageSwitcher.contains(e.target)) {
+                    document.getElementById('language-dropdown').classList.remove('show');
+                }
+            });
+        });
+
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                showHome();
+                document.getElementById('language-dropdown').classList.remove('show');
+            }
+        });
+    </script>
 </body>
-</html> 
+</html>
