@@ -32,12 +32,16 @@
         }
 
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .nav-left-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
         }
 
         .logo {
@@ -170,10 +174,14 @@
 
         /* 主内容区域 */
         .main-content {
-            margin-top: 80px;
+            margin-top: 80px; /* Navbar height */
             min-height: calc(100vh - 80px);
             display: flex;
-            flex-direction: column;
+            gap: 2rem; /* Space between sidebar and content area */
+            padding: 2rem;
+            /* max-width: 1400px; Overall max width - REMOVED */
+            /* margin-left: auto; REMOVED */
+            /* margin-right: auto; REMOVED */
         }
 
         /* 欢迎区域 */
@@ -198,87 +206,105 @@
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
-        /* 游戏分类网格 */
+        /* NEW: Sidebar - Game Categories Section */
         .categories-section {
-            padding: 3rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: white;
-            margin-bottom: 3rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .category-card {
+            width: 280px;
+            flex-shrink: 0;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem;
+            height: fit-content; /* Adjusts to content or make it scrollable if very long */
+        }
+        
+        .categories-section .section-title { /* Re-styling for sidebar */
+            text-align: left;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .categories-section .categories-grid { /* Changed from grid to flex column */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            /* Removed grid-template-columns and old margin */
+        }
+
+        .categories-section .category-card { /* Styling for cards in sidebar */
+            background: rgba(255, 255, 255, 0.1); /* Base background */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px; /* Slightly smaller radius */
+            padding: 1rem; /* Adjusted padding */
+            text-align: left; /* Align text left */
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            display: flex; /* For icon and text alignment */
+            align-items: center;
+            gap: 1rem;
         }
 
-        .category-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        .categories-section .category-card:hover {
+            transform: translateX(5px); /* Subtle horizontal shift */
+            background: rgba(255, 255, 255, 0.25); /* Brighter hover */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .categories-section .category-card::before { /* Disabling shine for sidebar cards */
+            display: none;
         }
 
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.5s;
+        .categories-section .category-icon {
+            font-size: 1.8rem; /* Adjusted icon size */
+            margin-bottom: 0; /* Reset margin */
+            flex-shrink: 0;
         }
 
-        .category-card:hover::before {
-            left: 100%;
-        }
-
-        .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .category-title {
-            font-size: 1.5rem;
+        .categories-section .category-title {
+            font-size: 1.1rem; /* Adjusted title size */
             font-weight: bold;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.2rem;
         }
 
-        .category-desc {
+        .categories-section .category-desc {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* OLD .categories-section styles are effectively replaced or adapted above */
+        /* Remove or comment out old .categories-section, .section-title (if global), .categories-grid, .category-card global styles if they conflict */
+        /* For example, the old .categories-section styles at lines 193-200 are no longer needed as global */
+        /* The old .section-title at lines 202-208 is now specific to .categories-section .section-title or .page-content-area .section-title */
+        /* The old .categories-grid at lines 210-214 is now specific to .categories-section .categories-grid */
+        /* The old .category-card at lines 216-248 is now specific to .categories-section .category-card */
+        
+        /* NEW: Page Content Area (right of sidebar) */
+        .page-content-area {
+            flex-grow: 1; /* Takes remaining space */
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Prevents overflow issues with flex children */
+        }
+        
+        /* Ensure hero section takes full width of its new container */
+        #hero-content-area { /* Formerly .hero-section, ID added for JS */
+             width: 100%;
         }
 
         /* 游戏内容区域 */
-        .game-content {
-            display: none;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
+        .game-content { /* This is #game-display-area */
+            display: none; /* Hidden by default, shown by JS */
+            padding: 0; /* Padding will be handled by its children or specific content */
+            /* max-width: 1200px; Remove - now constrained by .page-content-area */
+            /* margin: 0 auto; Remove */
+            width: 100%; /* Takes full width of .page-content-area */
         }
 
         .game-content.active {
@@ -379,13 +405,31 @@
             .nav-right {
                 gap: 1rem;
             }
+
+            /* Responsive adjustments for main content and sidebar */
+            .main-content {
+                flex-direction: column; /* Stack sidebar and content */
+                align-items: stretch; /* Stretch items to full width */
+                padding: 1rem; /* Adjust padding */
+            }
+
+            .categories-section {
+                width: 100%; /* Sidebar takes full width */
+                margin-bottom: 1.5rem; /* Space below sidebar when stacked */
+            }
+
+            /* Optional: adjust category card layout in sidebar for small screens */
+            .categories-section .category-card {
+                /* flex-direction: column; */ /* Uncomment to stack icon/text vertically */
+                /* align-items: flex-start; */
+            }
+            
+            .page-content-area {
+                width: 100%;
+            }
             
             .hero-title {
                 font-size: 2.5rem;
-            }
-            
-            .categories-grid {
-                grid-template-columns: 1fr;
             }
             
             .game-iframe {
@@ -429,28 +473,11 @@
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo" data-lang-key="logo">🎮 bombkeeper</div>
+            <div class="nav-left-group">
+                <div class="logo" data-lang-key="logo">🎮 bombkeeper</div>
+                <a href="#" class="nav-link" onclick="showHome()" data-lang-key="nav-home">首页</a>
+            </div>
             <div class="nav-right">
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showHome()" data-lang-key="nav-home">首页</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showCategory('action')" data-lang-key="nav-action">动作游戏</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showCategory('puzzle')" data-lang-key="nav-puzzle">益智游戏</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showCategory('strategy')" data-lang-key="nav-strategy">策略游戏</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showCategory('casual')" data-lang-key="nav-casual">休闲游戏</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showCategory('rpg')" data-lang-key="nav-rpg">角色扮演</a>
-                    </li>
-                </ul>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageDropdown()">
                         <span id="current-language">中文</span>
@@ -473,68 +500,80 @@
 
     <!-- 主内容 -->
     <main class="main-content">
-        <!-- 首页内容 -->
-        <div id="home-content">
-            <!-- 欢迎区域 -->
-            <section class="hero-section">
-                <h1 class="hero-title" data-lang-key="hero-title">欢迎来到bombkeeper</h1>
-                <p class="hero-subtitle" data-lang-key="hero-subtitle">探索精彩纷呈的在线游戏世界，享受无限乐趣！</p>
-            </section>
-
-            <!-- 游戏分类 -->
-            <section class="categories-section">
-                <h2 class="section-title" data-lang-key="categories-title">🎯 游戏分类</h2>
-                <div class="categories-grid">
-                    <div class="category-card" onclick="showCategory('action')">
-                        <div class="category-icon">⚔️</div>
+        <!-- 左侧游戏分类 (原 categories-section) -->
+        <aside class="categories-section">
+            <h2 class="section-title" data-lang-key="categories-title">🎯 游戏分类</h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="showCategory('action')">
+                    <div class="category-icon">⚔️</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="action-title">动作游戏</h3>
                         <p class="category-desc" data-lang-key="action-desc">刺激的战斗与冒险等你来挑战</p>
                     </div>
-                    <div class="category-card" onclick="showCategory('puzzle')">
-                        <div class="category-icon">🧩</div>
+                </div>
+                <div class="category-card" onclick="showCategory('puzzle')">
+                    <div class="category-icon">🧩</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="puzzle-title">益智游戏</h3>
                         <p class="category-desc" data-lang-key="puzzle-desc">锻炼大脑，挑战智力极限</p>
                     </div>
-                    <div class="category-card" onclick="showCategory('strategy')">
-                        <div class="category-icon">🏰</div>
+                </div>
+                <div class="category-card" onclick="showCategory('strategy')">
+                    <div class="category-icon">🏰</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="strategy-title">策略游戏</h3>
                         <p class="category-desc" data-lang-key="strategy-desc">运筹帷幄，决胜千里</p>
                     </div>
-                    <div class="category-card" onclick="showCategory('casual')">
-                        <div class="category-icon">🎈</div>
+                </div>
+                <div class="category-card" onclick="showCategory('casual')">
+                    <div class="category-icon">🎈</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="casual-title">休闲游戏</h3>
                         <p class="category-desc" data-lang-key="casual-desc">轻松娱乐，放松身心</p>
                     </div>
-                    <div class="category-card" onclick="showCategory('rpg')">
-                        <div class="category-icon">🗡️</div>
+                </div>
+                <div class="category-card" onclick="showCategory('rpg')">
+                    <div class="category-icon">🗡️</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="rpg-title">角色扮演</h3>
                         <p class="category-desc" data-lang-key="rpg-desc">沉浸式体验，成为传奇英雄</p>
                     </div>
-                    <div class="category-card" onclick="showCategory('racing')">
-                        <div class="category-icon">🏎️</div>
+                </div>
+                <div class="category-card" onclick="showCategory('racing')">
+                    <div class="category-icon">🏎️</div>
+                    <div>
                         <h3 class="category-title" data-lang-key="racing-title">竞速游戏</h3>
                         <p class="category-desc" data-lang-key="racing-desc">速度与激情的完美结合</p>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </aside>
 
-        <!-- 游戏内容页面 -->
-        <div id="game-content" class="game-content">
-            <button class="back-button" onclick="showHome()" data-lang-key="back-button">← 返回首页</button>
-            <div class="content-header">
-                <h2 class="content-title" id="category-title">游戏分类</h2>
-                <p id="category-description" data-lang-key="select-game">选择您喜欢的游戏开始游玩</p>
-            </div>
-            
-            <!-- 游戏列表 -->
-            <div class="games-grid" id="games-list">
-                <!-- 游戏卡片将通过JavaScript动态生成 -->
-            </div>
-            
-            <!-- iframe容器 -->
-            <div class="game-iframe-container" id="iframe-container" style="display: none;">
-                <iframe id="game-iframe" class="game-iframe" src=""></iframe>
+        <!-- 右侧主内容区域 -->
+        <div class="page-content-area">
+            <!-- 欢迎区域 -->
+            <section id="hero-content-area" class="hero-section">
+                <h1 class="hero-title" data-lang-key="hero-title">欢迎来到bombkeeper</h1>
+                <p class="hero-subtitle" data-lang-key="hero-subtitle">探索精彩纷呈的在线游戏世界，享受无限乐趣！</p>
+            </section>
+
+            <!-- 游戏内容页面 -->
+            <div id="game-display-area" class="game-content"> <!-- ID changed from game-content to game-display-area -->
+                <button class="back-button" onclick="showHome()" data-lang-key="back-button">← 返回首页</button>
+                <div class="content-header">
+                    <h2 class="content-title" id="category-title">游戏分类</h2>
+                    <p id="category-description" data-lang-key="select-game">选择您喜欢的游戏开始游玩</p>
+                </div>
+                
+                <!-- 游戏列表 -->
+                <div class="games-grid" id="games-list">
+                    <!-- 游戏卡片将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- iframe容器 -->
+                <div class="game-iframe-container" id="iframe-container" style="display: none;">
+                    <iframe id="game-iframe" class="game-iframe" src=""></iframe>
+                </div>
             </div>
         </div>
     </main>
@@ -615,26 +654,6 @@
                         name: { 'zh-CN': "魂斗罗", 'en-US': "Contra" }, 
                         desc: { 'zh-CN': "经典的横版射击游戏", 'en-US': "Classic side-scrolling shooter" }, 
                         url: "https://8090game.com/play/663e275b4b66e08a3b3e10a4" 
-                    },
-                    { 
-                        name: { 'zh-CN': "超级玛丽", 'en-US': "Super Mario" }, 
-                        desc: { 'zh-CN': "经典的横版闯关游戏", 'en-US': "Classic side-scrolling platformer" }, 
-                        url: "https://supermario-game.com" 
-                    },
-                    { 
-                        name: { 'zh-CN': "忍者切水果", 'en-US': "Fruit Ninja" }, 
-                        desc: { 'zh-CN': "考验反应速度的切水果游戏", 'en-US': "Test your reflexes with fruit slicing" }, 
-                        url: "https://www.crazygames.com/game/fruit-ninja" 
-                    },
-                    { 
-                        name: { 'zh-CN': "坦克大战", 'en-US': "Tank Battle" }, 
-                        desc: { 'zh-CN': "经典的坦克对战游戏", 'en-US': "Classic tank combat game" }, 
-                        url: "https://www.crazygames.com/game/tank-trouble" 
-                    },
-                    { 
-                        name: { 'zh-CN': "太空射击", 'en-US': "Space Shooter" }, 
-                        desc: { 'zh-CN': "在太空中消灭敌人", 'en-US': "Eliminate enemies in space" }, 
-                        url: "https://www.crazygames.com/game/space-invaders" 
                     }
                 ]
             },
@@ -652,157 +671,10 @@
                         name: { 'zh-CN': "扫雷", 'en-US': "Minesweeper" }, 
                         desc: { 'zh-CN': "经典的逻辑推理游戏", 'en-US': "Classic logic puzzle game" }, 
                         url: "https://ohminesweeper.online/" 
-                    },
-                    { 
-                        name: { 'zh-CN': "俄罗斯方块", 'en-US': "Tetris" }, 
-                        desc: { 'zh-CN': "经典的方块消除游戏", 'en-US': "Classic block-clearing game" }, 
-                        url: "https://tetris.com/play-tetris" 
-                    },
-                    { 
-                        name: { 'zh-CN': "数独游戏", 'en-US': "Sudoku" }, 
-                        desc: { 'zh-CN': "数字逻辑推理游戏", 'en-US': "Number logic puzzle game" }, 
-                        url: "https://sudoku.com" 
-                    },
-                    { 
-                        name: { 'zh-CN': "2048", 'en-US': "2048" }, 
-                        desc: { 'zh-CN': "数字合并益智游戏", 'en-US': "Number merging puzzle game" }, 
-                        url: "https://play2048.co" 
-                    },
-                    { 
-                        name: { 'zh-CN': "连连看", 'en-US': "Mahjong Connect" }, 
-                        desc: { 'zh-CN': "图案配对消除游戏", 'en-US': "Pattern matching game" }, 
-                        url: "https://www.crazygames.com/game/mahjong-connect" 
-                    }
-                ]
-            },
-            strategy: {
-                title: {
-                    'zh-CN': "🏰 策略游戏",
-                    'en-US': "🏰 Strategy Games"
-                },
-                description: {
-                    'zh-CN': "运筹帷幄，制定战略",
-                    'en-US': "Plan strategies and make tactical decisions"
-                },
-                games: [
-                    { 
-                        name: { 'zh-CN': "国际象棋", 'en-US': "Chess" }, 
-                        desc: { 'zh-CN': "经典的策略对弈游戏", 'en-US': "Classic strategic board game" }, 
-                        url: "https://www.chess.com" 
-                    },
-                    { 
-                        name: { 'zh-CN': "塔防游戏", 'en-US': "Tower Defense" }, 
-                        desc: { 'zh-CN': "建造防御塔抵御敌人", 'en-US': "Build towers to defend against enemies" }, 
-                        url: "https://www.crazygames.com/game/bloons-td-6" 
-                    },
-                    { 
-                        name: { 'zh-CN': "围棋", 'en-US': "Go" }, 
-                        desc: { 'zh-CN': "古老的策略棋类游戏", 'en-US': "Ancient strategic board game" }, 
-                        url: "https://online-go.com" 
-                    },
-                    { 
-                        name: { 'zh-CN': "帝国时代", 'en-US': "Age of Empires" }, 
-                        desc: { 'zh-CN': "建立你的文明帝国", 'en-US': "Build your civilization empire" }, 
-                        url: "https://www.crazygames.com/game/age-of-war" 
-                    }
-                ]
-            },
-            casual: {
-                title: {
-                    'zh-CN': "🎈 休闲游戏",
-                    'en-US': "🎈 Casual Games"
-                },
-                description: {
-                    'zh-CN': "轻松娱乐，放松心情",
-                    'en-US': "Relax and enjoy entertainment"
-                },
-                games: [
-                    { 
-                        name: { 'zh-CN': "愤怒的小鸟", 'en-US': "Angry Birds" }, 
-                        desc: { 'zh-CN': "用弹弓射击绿猪", 'en-US': "Use slingshot to shoot green pigs" }, 
-                        url: "https://www.crazygames.com/game/angry-birds" 
-                    },
-                    { 
-                        name: { 'zh-CN': "贪吃蛇", 'en-US': "Snake" }, 
-                        desc: { 'zh-CN': "控制蛇吃食物变长", 'en-US': "Control snake to eat food and grow" }, 
-                        url: "https://www.crazygames.com/game/snake" 
-                    },
-                    { 
-                        name: { 'zh-CN': "泡泡龙", 'en-US': "Bubble Shooter" }, 
-                        desc: { 'zh-CN': "射击消除彩色泡泡", 'en-US': "Shoot and pop colorful bubbles" }, 
-                        url: "https://www.crazygames.com/game/bubble-shooter" 
-                    },
-                    { 
-                        name: { 'zh-CN': "消消乐", 'en-US': "Candy Crush" }, 
-                        desc: { 'zh-CN': "三消类休闲游戏", 'en-US': "Match-3 casual game" }, 
-                        url: "https://www.crazygames.com/game/candy-crush" 
-                    }
-                ]
-            },
-            rpg: {
-                title: {
-                    'zh-CN': "🗡️ 角色扮演",
-                    'en-US': "🗡️ Role Playing"
-                },
-                description: {
-                    'zh-CN': "扮演角色，体验冒险",
-                    'en-US': "Play roles and experience adventures"
-                },
-                games: [
-                    { 
-                        name: { 'zh-CN': "勇者斗恶龙", 'en-US': "Dragon Quest" }, 
-                        desc: { 'zh-CN': "经典的RPG冒险游戏", 'en-US': "Classic RPG adventure game" }, 
-                        url: "https://www.crazygames.com/game/dragon-quest" 
-                    },
-                    { 
-                        name: { 'zh-CN': "魔法师传奇", 'en-US': "Wizard Legend" }, 
-                        desc: { 'zh-CN': "使用魔法战胜敌人", 'en-US': "Use magic to defeat enemies" }, 
-                        url: "https://www.crazygames.com/game/wizard-101" 
-                    },
-                    { 
-                        name: { 'zh-CN': "骑士冒险", 'en-US': "Knight Adventure" }, 
-                        desc: { 'zh-CN': "成为勇敢的骑士", 'en-US': "Become a brave knight" }, 
-                        url: "https://www.crazygames.com/game/knight-adventure" 
-                    },
-                    { 
-                        name: { 'zh-CN': "精灵物语", 'en-US': "Pokemon Story" }, 
-                        desc: { 'zh-CN': "与精灵一起冒险", 'en-US': "Adventure with pokemon" }, 
-                        url: "https://www.crazygames.com/game/pokemon" 
-                    }
-                ]
-            },
-            racing: {
-                title: {
-                    'zh-CN': "🏎️ 竞速游戏",
-                    'en-US': "🏎️ Racing Games"
-                },
-                description: {
-                    'zh-CN': "速度与激情的体验",
-                    'en-US': "Experience speed and passion"
-                },
-                games: [
-                    { 
-                        name: { 'zh-CN': "极速赛车", 'en-US': "Speed Racing" }, 
-                        desc: { 'zh-CN': "在赛道上飞驰", 'en-US': "Race on the track" }, 
-                        url: "https://www.crazygames.com/game/racing-car" 
-                    },
-                    { 
-                        name: { 'zh-CN': "摩托车竞速", 'en-US': "Moto Racing" }, 
-                        desc: { 'zh-CN': "驾驶摩托车比赛", 'en-US': "Drive motorcycle racing" }, 
-                        url: "https://www.crazygames.com/game/moto-x3m" 
-                    },
-                    { 
-                        name: { 'zh-CN': "卡丁车", 'en-US': "Go Kart" }, 
-                        desc: { 'zh-CN': "有趣的卡丁车比赛", 'en-US': "Fun go-kart racing" }, 
-                        url: "https://www.crazygames.com/game/go-kart" 
-                    },
-                    { 
-                        name: { 'zh-CN': "飞机竞速", 'en-US': "Air Race" }, 
-                        desc: { 'zh-CN': "在天空中竞速", 'en-US': "Race in the sky" }, 
-                        url: "https://www.crazygames.com/game/air-race" 
                     }
                 ]
             }
+            // strategy, casual, rpg, racing categories and their games are removed
         };
 
         // 语言切换功能
@@ -852,11 +724,27 @@
 
         // 显示首页
         function showHome() {
-            document.getElementById('home-content').style.display = 'block';
-            document.getElementById('game-content').classList.remove('active');
-            document.getElementById('iframe-container').style.display = 'none';
+            document.getElementById('hero-content-area').style.display = 'block';
+            const gameDisplayArea = document.getElementById('game-display-area');
+            if (gameDisplayArea) gameDisplayArea.classList.remove('active');
             
-            // 滚动到顶部
+            const iframeContainer = document.getElementById('iframe-container');
+            if (iframeContainer) iframeContainer.style.display = 'none';
+
+            const gamesList = document.getElementById('games-list');
+            if (gamesList) gamesList.style.display = 'grid'; 
+            
+            // Reset content-header state for when gameDisplayArea becomes active again
+            if (gameDisplayArea) {
+                const contentHeader = gameDisplayArea.querySelector('.content-header');
+                if (contentHeader) {
+                    contentHeader.style.display = 'block'; // Default display
+                }
+                const categoryDescElement = document.getElementById('category-description');
+                if (categoryDescElement) {
+                    categoryDescElement.style.display = 'block'; // Default display
+                }
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -865,32 +753,37 @@
             const data = gameData[category];
             if (!data) return;
 
-            // 隐藏首页，显示游戏内容
-            document.getElementById('home-content').style.display = 'none';
-            document.getElementById('game-content').classList.add('active');
-            document.getElementById('iframe-container').style.display = 'none';
-
-            // 更新标题和描述
-            document.getElementById('category-title').textContent = data.title[currentLanguage];
-            document.getElementById('category-description').textContent = data.description[currentLanguage];
-
-            // 生成游戏列表
-            const gamesList = document.getElementById('games-list');
-            gamesList.innerHTML = '';
+            document.getElementById('hero-content-area').style.display = 'none';
+            const gameDisplayArea = document.getElementById('game-display-area');
+            if (gameDisplayArea) {
+                gameDisplayArea.classList.add('active');
+            }
             
-            data.games.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.className = 'game-card fade-in';
-                gameCard.innerHTML = `
-                    <h3>${game.name[currentLanguage]}</h3>
-                    <p>${game.desc[currentLanguage]}</p>
-                `;
-                gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage]);
-                gamesList.appendChild(gameCard);
-            });
+            const contentHeader = gameDisplayArea.querySelector('.content-header');
+            if (contentHeader) {
+                contentHeader.style.display = 'none'; // Hide category title/desc when showing game list
+            }
 
-            // 滚动到顶部
-            window.scrollTo({ top: 80, behavior: 'smooth' });
+            const iframeContainer = document.getElementById('iframe-container');
+            if (iframeContainer) iframeContainer.style.display = 'none';
+            
+            const gamesList = document.getElementById('games-list');
+            if (gamesList) {
+                gamesList.style.display = 'grid'; // 确保游戏列表容器可见
+                gamesList.innerHTML = ''; // 清空旧游戏
+                data.games.forEach(game => {
+                    const gameCard = document.createElement('div');
+                    gameCard.className = 'game-card fade-in';
+                    gameCard.innerHTML = `
+                        <h3>${game.name[currentLanguage]}</h3>
+                        <p>${game.desc[currentLanguage]}</p>
+                    `;
+                    gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage]);
+                    gamesList.appendChild(gameCard);
+                });
+            }
+            
+            window.scrollTo({ top: 80, behavior: 'smooth' }); // 滚动到导航栏下方
         }
 
         // 加载游戏
@@ -898,25 +791,41 @@
             const iframe = document.getElementById('game-iframe');
             const container = document.getElementById('iframe-container');
             const gamesList = document.getElementById('games-list');
+            const gameDisplayArea = document.getElementById('game-display-area');
             
-            // 显示加载状态
-            iframe.src = '';
-            container.style.display = 'block';
-            gamesList.style.display = 'none';
+            if (gameDisplayArea && !gameDisplayArea.classList.contains('active')) {
+                document.getElementById('hero-content-area').style.display = 'none';
+                gameDisplayArea.classList.add('active');
+            }
+
+            const contentHeader = gameDisplayArea.querySelector('.content-header');
+            if (contentHeader) {
+                contentHeader.style.display = 'block'; // Show the header for the game title
+            }
+
+            const categoryDescElement = document.getElementById('category-description');
+            if (categoryDescElement) {
+                categoryDescElement.style.display = 'none'; // Hide the category description part
+            }
+
+            if (gamesList) gamesList.style.display = 'none'; 
+            if (container) container.style.display = 'block'; 
+            if (iframe) iframe.src = ''; 
             
-            // 更新标题
-            const title = document.getElementById('category-title');
-            title.innerHTML = `🎮 ${name} <span class="loading"></span>`;
+            const titleElement = document.getElementById('category-title'); 
+            if (titleElement) {
+                titleElement.innerHTML = `🎮 ${name} <span class="loading"></span>`;
+            }
             
-            // 加载游戏
             setTimeout(() => {
-                iframe.src = url;
-                title.textContent = `🎮 ${name}`;
+                if (iframe) iframe.src = url;
+                if (titleElement) titleElement.textContent = `🎮 ${name}`;
             }, 500);
             
-            // 滚动到iframe
             setTimeout(() => {
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }, 600);
         }
 
