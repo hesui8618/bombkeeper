@@ -89,11 +89,11 @@
         }
 
         .language-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
+            background: transparent;
+            color: #333;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 20px;
+            border-radius: 0;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 500;
@@ -104,8 +104,14 @@
         }
 
         .language-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            background: rgba(128, 128, 128, 0.2);
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+
+        .language-btn .arrow {
+            color: #000;
+            font-size: 0.8rem;
         }
 
         .language-dropdown {
@@ -154,12 +160,12 @@
         }
 
         .language-option.active {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
+            background: rgba(128, 128, 128, 0.3);
+            color: #333;
         }
 
         .language-option.active:hover {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: rgba(128, 128, 128, 0.4);
         }
 
         /* 主内容区域 */
@@ -448,7 +454,7 @@
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageDropdown()">
                         <span id="current-language">中文</span>
-                        <span>▼</span>
+                        <span class="arrow">▼</span>
                     </button>
                     <div class="language-dropdown" id="language-dropdown">
                         <div class="language-option active" onclick="changeLanguage('zh-CN')">
