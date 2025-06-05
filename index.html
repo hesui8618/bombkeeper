@@ -418,6 +418,78 @@
             padding: 0;
         }
 
+        /* 拳皇游戏样式 */
+        .kof-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 1024px;
+            height: 753px;
+            overflow: hidden;
+        }
+        
+        .kof-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 雪人兄弟游戏样式 */
+        .snowbros-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 800px;
+            height: 600px;
+            overflow: hidden;
+        }
+        
+        .snowbros-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 僵尸游戏样式 */
+        .zombie-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 900px;
+            height: 656px;
+            overflow: hidden;
+        }
+        
+        .zombie-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 维京游戏样式 */
+        .viking-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 960px;
+            height: 630px;
+            overflow: hidden;
+        }
+        
+        .viking-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
         /* 游戏列表 */
         .games-grid {
             display: grid;
@@ -730,6 +802,18 @@
                         name: { 'zh-CN': "Punch Boxing Championship", 'en-US': "Punch Boxing Championship" }, 
                         desc: { 'zh-CN': "刺激的拳击冠军赛游戏", 'en-US': "Exciting boxing championship game" }, 
                         url: "https://storage.y8.com/y8-studio/unity/akeemywka/punch_boxing_championship/?key=y8&value=default" 
+                    },
+                    { 
+                        name: { 'zh-CN': "闪翼拳皇1.9", 'en-US': "KOF Wing 1.9" }, 
+                        desc: { 'zh-CN': "经典格斗对战游戏", 'en-US': "Classic fighting game" }, 
+                        url: "https://en.gameslol.net/data/kof19/index.php?key=y8&value=default",
+                        specialStyle: "kof-game" // 添加特殊样式标记
+                    },
+                    { 
+                        name: { 'zh-CN': "Zombies vs Berserk", 'en-US': "Zombies vs Berserk" }, 
+                        desc: { 'zh-CN': "激烈的僵尸射击游戏", 'en-US': "Intense zombie shooting game" }, 
+                        url: "https://storage.y8.com/y8-studio/unity/akeemywka/zombies_vs_berserk_v2/?key=y8&ratio_tolerant=true&value=default",
+                        specialStyle: "zombie-game" // 添加特殊样式标记
                     }
                 ]
             },
@@ -778,13 +862,7 @@
                     'zh-CN': "轻松娱乐，放松心情",
                     'en-US': "Relax and enjoy entertainment"
                 },
-                games: [
-                    { 
-                        name: { 'zh-CN': "吃豆人", 'en-US': "Pac-Man" }, 
-                        desc: { 'zh-CN': "经典的街机游戏，躲避幽灵，吃掉所有豆子。", 'en-US': "Classic arcade game, avoid ghosts and eat all the dots." }, 
-                        url: "https://passer-by.com/pacman/" 
-                    }
-                ]
+                games: []
             },
             rpg: { // Ensuring rpg category exists
                 title: {
@@ -795,7 +873,14 @@
                     'zh-CN': "扮演角色，体验冒险",
                     'en-US': "Play roles and experience adventures"
                 },
-                games: []
+                games: [
+                    { 
+                        name: { 'zh-CN': "Vikings", 'en-US': "Vikings" }, 
+                        desc: { 'zh-CN': "扮演维京战士，展开冒险征程", 'en-US': "Play as a Viking warrior on an epic adventure" }, 
+                        url: "https://storage.y8.com/y8-studio/unity/akeemywka/vikings/?key=y8&value=default",
+                        specialStyle: "viking-game" // 添加特殊样式标记
+                    }
+                ]
             },
             racing: { // Ensuring racing category exists
                 title: {
@@ -975,6 +1060,38 @@
                 container.className = 'game-iframe-container minesweeper-game-container';
                 if (iframe) {
                     iframe.className = 'minesweeper-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (specialStyle === 'kof-game') {
+                // 拳皇游戏样式
+                container.className = 'game-iframe-container kof-game-container';
+                if (iframe) {
+                    iframe.className = 'kof-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (specialStyle === 'snowbros-game') {
+                // 雪人兄弟游戏样式
+                container.className = 'game-iframe-container snowbros-game-container';
+                if (iframe) {
+                    iframe.className = 'snowbros-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (specialStyle === 'zombie-game') {
+                // 僵尸游戏样式
+                container.className = 'game-iframe-container zombie-game-container';
+                if (iframe) {
+                    iframe.className = 'zombie-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (specialStyle === 'viking-game') {
+                // 维京游戏样式
+                container.className = 'game-iframe-container viking-game-container';
+                if (iframe) {
+                    iframe.className = 'viking-game-frame';
                     iframe.scrolling = 'no';
                     iframe.src = '';
                 }
