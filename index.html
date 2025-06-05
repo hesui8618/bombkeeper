@@ -175,7 +175,7 @@
         /* 主内容区域 */
         .main-content {
             margin-top: 80px; /* Navbar height */
-            min-height: calc(100vh - 80px);
+            /* min-height: calc(100vh - 80px); */ /* REMOVED: Allow content to dictate height and enable scrolling */
             display: flex;
             gap: 2rem; /* Space between sidebar and content area */
             padding: 2rem;
@@ -344,12 +344,14 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
+        /* 游戏iframe容器 */
         .game-iframe-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden; /* 防止内容溢出 */
         }
 
         .game-iframe {
@@ -357,7 +359,63 @@
             height: 600px;
             border: none;
             border-radius: 10px;
-            background: white;
+            background: #000; /* 改为黑色背景，减少白边视觉效果 */
+            display: block; /* 消除内联元素间隙 */
+        }
+
+        /* 特定游戏的样式调整 */
+        .boxing-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 960px;
+            height: 630px;
+            overflow: hidden;
+        }
+        
+        .boxing-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 塔防游戏样式 */
+        .td-game-container {
+            background: #000;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 960px;
+            height: 600px;
+            overflow: hidden;
+        }
+        
+        .td-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 扫雷游戏样式 */
+        .minesweeper-game-container {
+            background: #f0f0f0;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 800px;
+            height: 600px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        .minesweeper-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
         }
 
         /* 游戏列表 */
@@ -539,6 +597,13 @@
                         <p class="category-desc" data-lang-key="rpg-desc">沉浸式体验，成为传奇英雄</p>
                     </div>
                 </div>
+                <div class="category-card" onclick="showCategory('adventure')">
+                    <div class="category-icon">🗺️</div>
+                    <div>
+                        <h3 class="category-title" data-lang-key="adventure-title">探险游戏</h3>
+                        <p class="category-desc" data-lang-key="adventure-desc">踏上未知的旅程，探索奇妙的世界</p>
+                    </div>
+                </div>
                 <div class="category-card" onclick="showCategory('racing')">
                     <div class="category-icon">🏎️</div>
                     <div>
@@ -572,7 +637,7 @@
                 
                 <!-- iframe容器 -->
                 <div class="game-iframe-container" id="iframe-container" style="display: none;">
-                    <iframe id="game-iframe" class="game-iframe" src=""></iframe>
+                    <iframe id="game-iframe" class="game-iframe" src="" scrolling="no"></iframe>
                 </div>
             </div>
         </div>
@@ -589,6 +654,7 @@
                 'nav-strategy': '策略游戏',
                 'nav-casual': '休闲游戏',
                 'nav-rpg': '角色扮演',
+                'nav-adventure': '探险游戏',
                 'hero-title': '欢迎来到bombkeeper',
                 'hero-subtitle': '探索精彩纷呈的在线游戏世界，享受无限乐趣！',
                 'categories-title': '🎯 游戏分类',
@@ -604,6 +670,8 @@
                 'rpg-desc': '沉浸式体验，成为传奇英雄',
                 'racing-title': '竞速游戏',
                 'racing-desc': '速度与激情的完美结合',
+                'adventure-title': '探险游戏',
+                'adventure-desc': '踏上未知的旅程，探索奇妙的世界',
                 'back-button': '← 返回首页',
                 'select-game': '选择您喜欢的游戏开始游玩'
             },
@@ -615,6 +683,7 @@
                 'nav-strategy': 'Strategy',
                 'nav-casual': 'Casual',
                 'nav-rpg': 'RPG',
+                'nav-adventure': 'Adventure',
                 'hero-title': 'Welcome to bombkeeper',
                 'hero-subtitle': 'Explore the wonderful world of online games and enjoy unlimited fun!',
                 'categories-title': '🎯 Game Categories',
@@ -630,6 +699,8 @@
                 'rpg-desc': 'Immersive experience, become a legendary hero',
                 'racing-title': 'Racing Games',
                 'racing-desc': 'Perfect combination of speed and passion',
+                'adventure-title': 'Adventure Games',
+                'adventure-desc': 'Embark on unknown journeys and explore fantastic worlds',
                 'back-button': '← Back to Home',
                 'select-game': 'Choose your favorite game to start playing'
             }
@@ -651,9 +722,14 @@
                 },
                 games: [
                     { 
-                        name: { 'zh-CN': "魂斗罗", 'en-US': "Contra" }, 
-                        desc: { 'zh-CN': "经典的横版射击游戏", 'en-US': "Classic side-scrolling shooter" }, 
-                        url: "https://8090game.com/play/663e275b4b66e08a3b3e10a4" 
+                        name: { 'zh-CN': "Dead Zed", 'en-US': "Dead Zed" }, 
+                        desc: { 'zh-CN': "刺激的动作冒险", 'en-US': "Exciting action adventure" }, 
+                        url: "https://storage.y8.com/y8-studio/html5/zoki/a646a84dc850/?key=y8&value=default" 
+                    },
+                    { 
+                        name: { 'zh-CN': "Punch Boxing Championship", 'en-US': "Punch Boxing Championship" }, 
+                        desc: { 'zh-CN': "刺激的拳击冠军赛游戏", 'en-US': "Exciting boxing championship game" }, 
+                        url: "https://storage.y8.com/y8-studio/unity/akeemywka/punch_boxing_championship/?key=y8&value=default" 
                     }
                 ]
             },
@@ -670,11 +746,79 @@
                     { 
                         name: { 'zh-CN': "扫雷", 'en-US': "Minesweeper" }, 
                         desc: { 'zh-CN': "经典的逻辑推理游戏", 'en-US': "Classic logic puzzle game" }, 
-                        url: "https://ohminesweeper.online/" 
+                        url: "https://ohminesweeper.online/",
+                        specialStyle: "minesweeper-game" // 添加特殊样式标记
                     }
                 ]
+            },
+            strategy: { // Ensuring strategy category exists, even if empty for now
+                title: {
+                    'zh-CN': "🏰 策略游戏",
+                    'en-US': "🏰 Strategy Games"
+                },
+                description: {
+                    'zh-CN': "运筹帷幄，制定战略",
+                    'en-US': "Plan strategies and make tactical decisions"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "Tower Defense: Monster Mash", 'en-US': "Tower Defense: Monster Mash" }, 
+                        desc: { 'zh-CN': "经典塔防游戏，抵御怪物入侵", 'en-US': "Classic tower defense game, defend against monster invasion" }, 
+                        url: "https://www.spiele-umsonst.de/azad/downloads/unitywebgl/tdmonstermash/?key=y8&value=default",
+                        specialStyle: "td-game" // 添加特殊样式标记
+                    }
+                ]
+            },
+            casual: { // Adding Pac-Man to casual games
+                title: {
+                    'zh-CN': "🎈 休闲游戏",
+                    'en-US': "🎈 Casual Games"
+                },
+                description: {
+                    'zh-CN': "轻松娱乐，放松心情",
+                    'en-US': "Relax and enjoy entertainment"
+                },
+                games: [
+                    { 
+                        name: { 'zh-CN': "吃豆人", 'en-US': "Pac-Man" }, 
+                        desc: { 'zh-CN': "经典的街机游戏，躲避幽灵，吃掉所有豆子。", 'en-US': "Classic arcade game, avoid ghosts and eat all the dots." }, 
+                        url: "https://passer-by.com/pacman/" 
+                    }
+                ]
+            },
+            rpg: { // Ensuring rpg category exists
+                title: {
+                    'zh-CN': "🗡️ 角色扮演",
+                    'en-US': "🗡️ Role Playing"
+                },
+                description: {
+                    'zh-CN': "扮演角色，体验冒险",
+                    'en-US': "Play roles and experience adventures"
+                },
+                games: []
+            },
+            racing: { // Ensuring racing category exists
+                title: {
+                    'zh-CN': "🏎️ 竞速游戏",
+                    'en-US': "🏎️ Racing Games"
+                },
+                description: {
+                    'zh-CN': "速度与激情的体验",
+                    'en-US': "Experience speed and passion"
+                },
+                games: []
+            },
+            adventure: { // ADDED adventure category
+                title: {
+                    'zh-CN': "🗺️ 探险游戏",
+                    'en-US': "🗺️ Adventure Games"
+                },
+                description: {
+                    'zh-CN': "踏上未知的旅程，探索奇妙的世界",
+                    'en-US': "Embark on unknown journeys and explore fantastic worlds"
+                },
+                games: []
             }
-            // strategy, casual, rpg, racing categories and their games are removed
         };
 
         // 语言切换功能
@@ -778,7 +922,7 @@
                         <h3>${game.name[currentLanguage]}</h3>
                         <p>${game.desc[currentLanguage]}</p>
                     `;
-                    gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage]);
+                    gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage], false, game.specialStyle);
                     gamesList.appendChild(gameCard);
                 });
             }
@@ -787,7 +931,13 @@
         }
 
         // 加载游戏
-        function loadGame(url, name) {
+        function loadGame(url, name, isExternal, specialStyle) {
+            if (isExternal) {
+                // 如果是外部链接，在新标签页中打开
+                window.open(url, '_blank');
+                return; // 不继续执行下面的代码
+            }
+            
             const iframe = document.getElementById('game-iframe');
             const container = document.getElementById('iframe-container');
             const gamesList = document.getElementById('games-list');
@@ -808,9 +958,43 @@
                 categoryDescElement.style.display = 'none'; // Hide the category description part
             }
 
-            if (gamesList) gamesList.style.display = 'none'; 
+            if (gamesList) gamesList.innerHTML = ''; // Clear the games list content
             if (container) container.style.display = 'block'; 
-            if (iframe) iframe.src = ''; 
+            
+            // 根据游戏类型应用特殊样式
+            if (specialStyle === 'td-game') {
+                // 塔防游戏样式
+                container.className = 'game-iframe-container td-game-container';
+                if (iframe) {
+                    iframe.className = 'td-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (specialStyle === 'minesweeper-game') {
+                // 扫雷游戏样式
+                container.className = 'game-iframe-container minesweeper-game-container';
+                if (iframe) {
+                    iframe.className = 'minesweeper-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else if (name.includes("Boxing")) {
+                // 拳击游戏样式
+                container.className = 'game-iframe-container boxing-game-container';
+                if (iframe) {
+                    iframe.className = 'boxing-game-frame';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            } else {
+                // 默认样式
+                container.className = 'game-iframe-container';
+                if (iframe) {
+                    iframe.className = 'game-iframe';
+                    iframe.scrolling = 'no';
+                    iframe.src = '';
+                }
+            }
             
             const titleElement = document.getElementById('category-title'); 
             if (titleElement) {
