@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>bombkeeper - 精品在线游戏平台</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3018746921944935"
+     crossorigin="anonymous"></script>
     <style>
         * {
             margin: 0;
@@ -13,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white; /* Solid white background */
             color: #333;
             overflow-x: hidden;
         }
@@ -47,10 +49,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #333; /* Use solid color for logo on light background */
         }
 
         .nav-right {
@@ -81,10 +80,10 @@
         }
 
         .nav-link:hover {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
+            background: #f0f0f0; /* Subtle grey on hover */
+            color: #333; /* Keep text dark */
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
         }
 
         /* 语言切换按钮 */
@@ -172,127 +171,110 @@
             background: rgba(128, 128, 128, 0.4);
         }
 
+        /* NEW: Styles for the Game Categories Dropdown in Navbar */
+        .category-switcher {
+            position: relative;
+        }
+
+        .category-btn {
+             /* Reuse .language-btn styles */
+        }
+
+        .category-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0; /* Align to the left */
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 150px; /* Adjust width as needed */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .category-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .category-option {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .category-option:hover {
+            background: #f5f5f5;
+        }
+
+        .category-option:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .category-option:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Adjust active style if needed, currently not used for categories */
+        /*
+        .category-option.active {
+            background: rgba(128, 128, 128, 0.3);
+            color: #333;
+        }
+
+        .category-option.active:hover {
+            background: rgba(128, 128, 128, 0.4);
+        }
+        */
+
         /* 主内容区域 */
         .main-content {
             margin-top: 80px; /* Navbar height */
-            /* min-height: calc(100vh - 80px); */ /* REMOVED: Allow content to dictate height and enable scrolling */
-            display: flex;
-            gap: 2rem; /* Space between sidebar and content area */
             padding: 2rem;
-            /* max-width: 1400px; Overall max width - REMOVED */
-            /* margin-left: auto; REMOVED */
-            /* margin-right: auto; REMOVED */
+            /* Removed Flexbox properties for sidebar layout */
+            display: block; /* Use block display as default */
+            max-width: 1400px; /* Optional: Add max-width for content centering */
+            margin: 80px auto 0; /* Optional: Center the content area */
         }
 
         /* 欢迎区域 */
         .hero-section {
             text-align: center;
             padding: 4rem 2rem;
-            color: white;
+            color: #333; /* Updated for light background */
         }
 
         .hero-title {
             font-size: 3.5rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: none; /* Remove text shadow on light background */
             animation: fadeInUp 1s ease-out;
         }
 
         .hero-subtitle {
             font-size: 1.3rem;
             margin-bottom: 2rem;
-            opacity: 0.9;
+            opacity: 0.8; /* Adjust opacity */
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
         /* NEW: Sidebar - Game Categories Section */
-        .categories-section {
-            width: 280px;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 1.5rem;
-            height: fit-content; /* Adjusts to content or make it scrollable if very long */
-        }
-        
-        .categories-section .section-title { /* Re-styling for sidebar */
-            text-align: left;
-            font-size: 1.8rem;
-            color: white;
-            margin-bottom: 1.5rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .categories-section .categories-grid { /* Changed from grid to flex column */
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            /* Removed grid-template-columns and old margin */
-        }
-
-        .categories-section .category-card { /* Styling for cards in sidebar */
-            background: rgba(255, 255, 255, 0.1); /* Base background */
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px; /* Slightly smaller radius */
-            padding: 1rem; /* Adjusted padding */
-            text-align: left; /* Align text left */
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex; /* For icon and text alignment */
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .categories-section .category-card:hover {
-            transform: translateX(5px); /* Subtle horizontal shift */
-            background: rgba(255, 255, 255, 0.25); /* Brighter hover */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .categories-section .category-card::before { /* Disabling shine for sidebar cards */
-            display: none;
-        }
-
-        .categories-section .category-icon {
-            font-size: 1.8rem; /* Adjusted icon size */
-            margin-bottom: 0; /* Reset margin */
-            flex-shrink: 0;
-        }
-
-        .categories-section .category-title {
-            font-size: 1.1rem; /* Adjusted title size */
-            font-weight: bold;
-            color: white;
-            margin-bottom: 0.2rem;
-        }
-
-        .categories-section .category-desc {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.8rem;
-            line-height: 1.3;
-        }
-
-        /* OLD .categories-section styles are effectively replaced or adapted above */
-        /* Remove or comment out old .categories-section, .section-title (if global), .categories-grid, .category-card global styles if they conflict */
-        /* For example, the old .categories-section styles at lines 193-200 are no longer needed as global */
-        /* The old .section-title at lines 202-208 is now specific to .categories-section .section-title or .page-content-area .section-title */
-        /* The old .categories-grid at lines 210-214 is now specific to .categories-section .categories-grid */
-        /* The old .category-card at lines 216-248 is now specific to .categories-section .category-card */
+        /* REMOVED: Entire .categories-section CSS block */
         
         /* NEW: Page Content Area (right of sidebar) */
-        .page-content-area {
-            flex-grow: 1; /* Takes remaining space */
-            display: flex;
-            flex-direction: column;
-            min-width: 0; /* Prevents overflow issues with flex children */
-        }
-        
+        /* REMOVED: .page-content-area CSS block */
+
         /* Ensure hero section takes full width of its new container */
         #hero-content-area { /* Formerly .hero-section, ID added for JS */
              width: 100%;
@@ -312,24 +294,24 @@
         }
 
         .content-header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #f5f5f5; /* Light grey background for header */
+            backdrop-filter: none; /* Remove blur on solid background */
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #e0e0e0; /* Add a light border */
         }
 
         .content-title {
-            color: white;
+            color: #333; /* Dark text color */
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
         .back-button {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
+            background: transparent;
+            color: #333; /* Standard text color, consistent with nav-link */
+            border: none; /* Remove border to match nav-link style */
             padding: 0.7rem 1.5rem;
             border-radius: 25px;
             cursor: pointer;
@@ -337,11 +319,14 @@
             font-weight: 500;
             transition: all 0.3s ease;
             margin-bottom: 1rem;
+            margin-left: -1.5rem; /* Negative margin to align text with content edge */
         }
 
         .back-button:hover {
+            background: #f0f0f0; /* Subtle grey on hover */
+            color: #333; /* Dark text on hover */
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
         }
 
         /* 游戏iframe容器 */
@@ -499,30 +484,31 @@
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #ffffff; /* Solid white background */
+            backdrop-filter: none; /* No blur needed */
             border-radius: 15px;
             padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #e0e0e0; /* Light grey border */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Softer shadow */
         }
 
         .game-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Slightly stronger shadow on hover */
         }
 
         .game-card h3 {
-            color: white;
+            color: #333; /* Dark text */
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
 
         .game-card p {
-            color: rgba(255, 255, 255, 0.8);
+            color: #666; /* Grey text for description */
             font-size: 0.9rem;
         }
 
@@ -606,6 +592,17 @@
             <div class="nav-left-group">
                 <div class="logo" data-lang-key="logo">🎮 bombkeeper</div>
                 <a href="#" class="nav-link" onclick="showHome()" data-lang-key="nav-home">首页</a>
+                <!-- NEW: Game Categories Dropdown -->
+                <div class="language-switcher category-switcher"> <!-- Reusing language-switcher classes for styling similarity -->
+                    <button class="language-btn category-btn" onclick="toggleCategoryDropdown()">
+                        <span id="current-category" data-lang-key="categories-title">🎯 游戏分类</span> <!-- Using categories-title for default text -->
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="language-dropdown category-dropdown" id="category-dropdown">
+                        <!-- Category options will be dynamically generated by JavaScript -->
+                    </div>
+                </div>
+                <!-- END NEW: Game Categories Dropdown -->
             </div>
             <div class="nav-right">
                 <div class="language-switcher">
@@ -631,63 +628,10 @@
     <!-- 主内容 -->
     <main class="main-content">
         <!-- 左侧游戏分类 (原 categories-section) -->
-        <aside class="categories-section">
-            <h2 class="section-title" data-lang-key="categories-title">🎯 游戏分类</h2>
-            <div class="categories-grid">
-                <div class="category-card" onclick="showCategory('action')">
-                    <div class="category-icon">⚔️</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="action-title">动作游戏</h3>
-                        <p class="category-desc" data-lang-key="action-desc">刺激的战斗与冒险等你来挑战</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('puzzle')">
-                    <div class="category-icon">🧩</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="puzzle-title">益智游戏</h3>
-                        <p class="category-desc" data-lang-key="puzzle-desc">锻炼大脑，挑战智力极限</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('strategy')">
-                    <div class="category-icon">🏰</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="strategy-title">策略游戏</h3>
-                        <p class="category-desc" data-lang-key="strategy-desc">运筹帷幄，决胜千里</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('casual')">
-                    <div class="category-icon">🎈</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="casual-title">休闲游戏</h3>
-                        <p class="category-desc" data-lang-key="casual-desc">轻松娱乐，放松身心</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('rpg')">
-                    <div class="category-icon">🗡️</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="rpg-title">角色扮演</h3>
-                        <p class="category-desc" data-lang-key="rpg-desc">沉浸式体验，成为传奇英雄</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('adventure')">
-                    <div class="category-icon">🗺️</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="adventure-title">探险游戏</h3>
-                        <p class="category-desc" data-lang-key="adventure-desc">踏上未知的旅程，探索奇妙的世界</p>
-                    </div>
-                </div>
-                <div class="category-card" onclick="showCategory('racing')">
-                    <div class="category-icon">🏎️</div>
-                    <div>
-                        <h3 class="category-title" data-lang-key="racing-title">竞速游戏</h3>
-                        <p class="category-desc" data-lang-key="racing-desc">速度与激情的完美结合</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <!-- REMOVED: Original <aside class="categories-section"> block -->
 
         <!-- 右侧主内容区域 -->
-        <div class="page-content-area">
+        <div class="page-content-area"> <!-- Keeping this container, but it will now take full width -->
             <!-- 欢迎区域 -->
             <section id="hero-content-area" class="hero-section">
                 <h1 class="hero-title" data-lang-key="hero-title">欢迎来到bombkeeper</h1>
@@ -696,7 +640,7 @@
 
             <!-- 游戏内容页面 -->
             <div id="game-display-area" class="game-content"> <!-- ID changed from game-content to game-display-area -->
-                <button class="back-button" onclick="showHome()" data-lang-key="back-button">← 返回首页</button>
+                <button class="back-button" onclick="showHome()" data-lang-key="back-button">返回首页</button>
                 <div class="content-header">
                     <h2 class="content-title" id="category-title">游戏分类</h2>
                     <p id="category-description" data-lang-key="select-game">选择您喜欢的游戏开始游玩</p>
@@ -744,7 +688,7 @@
                 'racing-desc': '速度与激情的完美结合',
                 'adventure-title': '探险游戏',
                 'adventure-desc': '踏上未知的旅程，探索奇妙的世界',
-                'back-button': '← 返回首页',
+                'back-button': '返回首页',
                 'select-game': '选择您喜欢的游戏开始游玩'
             },
             'en-US': {
@@ -773,7 +717,7 @@
                 'racing-desc': 'Perfect combination of speed and passion',
                 'adventure-title': 'Adventure Games',
                 'adventure-desc': 'Embark on unknown journeys and explore fantastic worlds',
-                'back-button': '← Back to Home',
+                'back-button': 'Back to Home',
                 'select-game': 'Choose your favorite game to start playing'
             }
         };
@@ -910,6 +854,8 @@
         function toggleLanguageDropdown() {
             const dropdown = document.getElementById('language-dropdown');
             dropdown.classList.toggle('show');
+            // Close category dropdown if open
+            document.getElementById('category-dropdown').classList.remove('show');
         }
 
         // 切换语言
@@ -949,6 +895,43 @@
                     element.textContent = translations[currentLanguage][key];
                 }
             });
+
+            // Update category dropdown button text
+            const currentCategorySpan = document.getElementById('current-category');
+            if (currentCategorySpan) {
+                 currentCategorySpan.textContent = translations[currentLanguage]['categories-title'];
+            }
+            
+            // Regenerate category options with updated language
+            generateCategoryDropdownOptions();
+        }
+
+        // NEW: 游戏分类下拉菜单功能
+        function toggleCategoryDropdown() {
+            const dropdown = document.getElementById('category-dropdown');
+            dropdown.classList.toggle('show');
+            // Close language dropdown if open
+            document.getElementById('language-dropdown').classList.remove('show');
+        }
+
+        // NEW: Dynamically generate category dropdown options
+        function generateCategoryDropdownOptions() {
+            const dropdown = document.getElementById('category-dropdown');
+            dropdown.innerHTML = ''; // Clear existing options
+
+            const categories = Object.keys(gameData);
+            categories.forEach(categoryKey => {
+                const category = gameData[categoryKey];
+                const option = document.createElement('div');
+                option.className = 'language-option category-option'; // Reuse styling classes
+                option.innerHTML = `
+                    <span>${category.title[currentLanguage].split(' ')[0] || ''}</span> <!-- Display icon -->
+                    <span>${category.title[currentLanguage].split(' ').slice(1).join(' ')}</span> <!-- Display text title -->
+                `;
+                // Add click handler to show category page
+                option.onclick = () => showCategory(categoryKey);
+                dropdown.appendChild(option);
+            });
         }
 
         // 显示首页
@@ -961,7 +944,7 @@
             if (iframeContainer) iframeContainer.style.display = 'none';
 
             const gamesList = document.getElementById('games-list');
-            if (gamesList) gamesList.style.display = 'grid'; 
+            if (gamesList) gamesList.innerHTML = ''; // Clear games list content on home
             
             // Reset content-header state for when gameDisplayArea becomes active again
             if (gameDisplayArea) {
@@ -973,13 +956,17 @@
                 if (categoryDescElement) {
                     categoryDescElement.style.display = 'block'; // Default display
                 }
+                 const categoryTitleElement = document.getElementById('category-title');
+                 if (categoryTitleElement) {
+                     categoryTitleElement.textContent = translations[currentLanguage]['categories-title']; // Reset category title text
+                 }
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // 显示游戏分类
-        function showCategory(category) {
-            const data = gameData[category];
+        function showCategory(categoryKey) { // Changed parameter name for clarity
+            const data = gameData[categoryKey]; // Use categoryKey to access data
             if (!data) return;
 
             document.getElementById('hero-content-area').style.display = 'none';
@@ -989,17 +976,21 @@
             }
             
             const contentHeader = gameDisplayArea.querySelector('.content-header');
-            if (contentHeader) {
-                contentHeader.style.display = 'none'; // Hide category title/desc when showing game list
-            }
+            const categoryTitleElement = document.getElementById('category-title');
+            const categoryDescElement = document.getElementById('category-description');
+
+            if (contentHeader) contentHeader.style.display = 'none'; // Hide the header
+            if (categoryTitleElement) categoryTitleElement.textContent = data.title[currentLanguage]; // Set category title
+            if (categoryDescElement) categoryDescElement.textContent = data.description[currentLanguage]; // Set category description
+            if (categoryDescElement) categoryDescElement.style.display = 'none'; // Hide description as well
 
             const iframeContainer = document.getElementById('iframe-container');
             if (iframeContainer) iframeContainer.style.display = 'none';
             
             const gamesList = document.getElementById('games-list');
             if (gamesList) {
-                gamesList.style.display = 'grid'; // 确保游戏列表容器可见
-                gamesList.innerHTML = ''; // 清空旧游戏
+                gamesList.style.display = 'grid'; // Ensure games list container is visible
+                gamesList.innerHTML = ''; // Clear old games
                 data.games.forEach(game => {
                     const gameCard = document.createElement('div');
                     gameCard.className = 'game-card fade-in';
@@ -1012,7 +1003,10 @@
                 });
             }
             
-            window.scrollTo({ top: 80, behavior: 'smooth' }); // 滚动到导航栏下方
+            // Close category dropdown
+            document.getElementById('category-dropdown').classList.remove('show');
+
+            window.scrollTo({ top: 80, behavior: 'smooth' }); // Scroll below navbar
         }
 
         // 加载游戏
@@ -1136,9 +1130,15 @@
             const savedLanguage = localStorage.getItem('preferred-language');
             if (savedLanguage && translations[savedLanguage]) {
                 changeLanguage(savedLanguage);
+            } else {
+                // If no saved language, initialize with default language and update text
+                updatePageText();
             }
             
             showHome();
+
+            // Generate category options on initial load
+            generateCategoryDropdownOptions();
             
             // 添加滚动效果
             window.addEventListener('scroll', function() {
@@ -1152,11 +1152,14 @@
                 }
             });
             
-            // 点击外部关闭语言下拉菜单
+            // 点击外部关闭下拉菜单
             document.addEventListener('click', function(e) {
                 const languageSwitcher = document.querySelector('.language-switcher');
-                if (!languageSwitcher.contains(e.target)) {
+                 const categorySwitcher = document.querySelector('.category-switcher');
+
+                if (!languageSwitcher.contains(e.target) && !categorySwitcher.contains(e.target)) {
                     document.getElementById('language-dropdown').classList.remove('show');
+                    document.getElementById('category-dropdown').classList.remove('show');
                 }
             });
         });
@@ -1165,7 +1168,9 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 showHome();
+                // Close both dropdowns on Escape
                 document.getElementById('language-dropdown').classList.remove('show');
+                document.getElementById('category-dropdown').classList.remove('show');
             }
         });
     </script>
