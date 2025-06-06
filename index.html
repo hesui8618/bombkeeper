@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta name="google-adsense-account" content="ca-pub-3018746921944935">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>bombkeeper - 精品在线游戏平台</title>
@@ -51,6 +50,7 @@
             font-size: 1.8rem;
             font-weight: bold;
             color: #333; /* Use solid color for logo on light background */
+            cursor: pointer;
         }
 
         .nav-right {
@@ -97,7 +97,7 @@
             color: #333;
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 0;
+            border-radius: 25px; /* Make it a capsule shape like nav-link */
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 500;
@@ -108,9 +108,9 @@
         }
 
         .language-btn:hover {
-            background: rgba(128, 128, 128, 0.2);
-            transform: translateY(-1px);
-            box-shadow: none;
+            background: #f0f0f0; /* Subtle grey on hover, consistent with nav-link */
+            transform: translateY(-2px); /* Match nav-link */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Match nav-link */
         }
 
         .language-btn .arrow {
@@ -237,6 +237,60 @@
             background: rgba(128, 128, 128, 0.4);
         }
         */
+
+        /* NEW: Search Bar in Navbar */
+        .nav-search {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            background: transparent;
+            color: #333;
+            border: 1px solid #ddd; /* A subtle border */
+            padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for icon */
+            border-radius: 25px; /* Capsule shape like nav-link */
+            cursor: text;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 160px; /* Initial width */
+            outline: none;
+            font-family: inherit; /* Inherit font from body */
+        }
+
+        .search-input::placeholder {
+            color: #888;
+            font-weight: 500;
+        }
+
+        .search-input:hover {
+            background: #f0f0f0; /* Subtle grey on hover, consistent with nav-link */
+            transform: translateY(-2px); /* Match nav-link */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Match nav-link */
+        }
+
+        .search-input:focus {
+            background: #fff;
+            border-color: #aaa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Match nav-link */
+            width: 200px; /* Expand on focus */
+        }
+
+        .nav-search .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none; /* Make icon not clickable, as input is the target */
+            transition: color 0.3s ease;
+        }
+        
+        .search-input:focus + .search-icon {
+            color: #333;
+        }
 
         /* 主内容区域 */
         .main-content {
@@ -591,8 +645,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-left-group">
-                <div class="logo" data-lang-key="logo">🎮 bombkeeper</div>
-                <a href="#" class="nav-link" onclick="showHome()" data-lang-key="nav-home">首页</a>
+                <div class="logo" data-lang-key="logo" onclick="showHome()">🎮 bombkeeper</div>
                 <!-- NEW: Game Categories Dropdown -->
                 <div class="language-switcher category-switcher"> <!-- Reusing language-switcher classes for styling similarity -->
                     <button class="language-btn category-btn" onclick="toggleCategoryDropdown()">
@@ -606,6 +659,10 @@
                 <!-- END NEW: Game Categories Dropdown -->
             </div>
             <div class="nav-right">
+                <div class="nav-search">
+                    <input type="search" id="gameSearchInput" class="search-input" placeholder="搜索游戏..." data-lang-key="search_placeholder">
+                    <span class="search-icon">🔍</span>
+                </div>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageDropdown()">
                         <span id="current-language">中文</span>
@@ -665,7 +722,6 @@
         const translations = {
             'zh-CN': {
                 'logo': '🎮 bombkeeper',
-                'nav-home': '首页',
                 'nav-action': '动作游戏',
                 'nav-puzzle': '益智游戏',
                 'nav-strategy': '策略游戏',
@@ -690,11 +746,13 @@
                 'adventure-title': '探险游戏',
                 'adventure-desc': '踏上未知的旅程，探索奇妙的世界',
                 'back-button': '返回首页',
-                'select-game': '选择您喜欢的游戏开始游玩'
+                'select-game': '选择您喜欢的游戏开始游玩',
+                'search_placeholder': '搜索游戏...',
+                'search_results_title': '搜索结果',
+                'no_games_found': '未找到相关游戏'
             },
             'en-US': {
                 'logo': '🎮 bombkeeper',
-                'nav-home': 'Home',
                 'nav-action': 'Action',
                 'nav-puzzle': 'Puzzle',
                 'nav-strategy': 'Strategy',
@@ -719,12 +777,16 @@
                 'adventure-title': 'Adventure Games',
                 'adventure-desc': 'Embark on unknown journeys and explore fantastic worlds',
                 'back-button': 'Back to Home',
-                'select-game': 'Choose your favorite game to start playing'
+                'select-game': 'Choose your favorite game to start playing',
+                'search_placeholder': 'Search for games...',
+                'search_results_title': 'Search Results',
+                'no_games_found': 'No matching games found'
             }
         };
 
         // 当前语言
         let currentLanguage = 'zh-CN';
+        let searchTimeout;
 
         // 游戏数据
         const gameData = {
@@ -893,7 +955,11 @@
             elements.forEach(element => {
                 const key = element.getAttribute('data-lang-key');
                 if (translations[currentLanguage] && translations[currentLanguage][key]) {
-                    element.textContent = translations[currentLanguage][key];
+                    if (element.tagName === 'INPUT' && element.placeholder !== undefined) {
+                        element.placeholder = translations[currentLanguage][key];
+                    } else {
+                        element.textContent = translations[currentLanguage][key];
+                    }
                 }
             });
 
@@ -1008,6 +1074,60 @@
             document.getElementById('category-dropdown').classList.remove('show');
 
             window.scrollTo({ top: 80, behavior: 'smooth' }); // Scroll below navbar
+        }
+
+        function displaySearchResults(searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+            document.getElementById('hero-content-area').style.display = 'none';
+            const gameDisplayArea = document.getElementById('game-display-area');
+            if (gameDisplayArea) {
+                gameDisplayArea.classList.add('active');
+            }
+            
+            const contentHeader = gameDisplayArea.querySelector('.content-header');
+            const categoryTitleElement = document.getElementById('category-title');
+            const categoryDescElement = document.getElementById('category-description');
+
+            if (contentHeader) contentHeader.style.display = 'block';
+            if (categoryTitleElement) categoryTitleElement.textContent = translations[currentLanguage]['search_results_title'];
+            if (categoryDescElement) {
+                categoryDescElement.innerHTML = `&ldquo;${searchTerm}&rdquo;`; // Use innerHTML for quotes
+                categoryDescElement.style.display = 'block';
+            }
+
+            const iframeContainer = document.getElementById('iframe-container');
+            if (iframeContainer) iframeContainer.style.display = 'none';
+            
+            const gamesList = document.getElementById('games-list');
+            if (gamesList) {
+                gamesList.style.display = 'grid';
+                gamesList.innerHTML = ''; // Clear old games
+
+                let gamesFound = false;
+                Object.values(gameData).forEach(category => {
+                    category.games.forEach(game => {
+                        const gameName = game.name[currentLanguage].toLowerCase();
+                        const gameDesc = game.desc[currentLanguage].toLowerCase();
+
+                        if (gameName.includes(lowerCaseSearchTerm) || gameDesc.includes(lowerCaseSearchTerm)) {
+                            const gameCard = document.createElement('div');
+                            gameCard.className = 'game-card fade-in';
+                            gameCard.innerHTML = `
+                                <h3>${game.name[currentLanguage]}</h3>
+                                <p>${game.desc[currentLanguage]}</p>
+                            `;
+                            gameCard.onclick = () => loadGame(game.url, game.name[currentLanguage], false, game.specialStyle);
+                            gamesList.appendChild(gameCard);
+                            gamesFound = true;
+                        }
+                    });
+                });
+
+                if (!gamesFound) {
+                    gamesList.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">${translations[currentLanguage]['no_games_found']}</p>`;
+                }
+            }
         }
 
         // 加载游戏
@@ -1155,13 +1275,37 @@
             
             // 点击外部关闭下拉菜单
             document.addEventListener('click', function(e) {
-                const languageSwitcher = document.querySelector('.language-switcher');
-                 const categorySwitcher = document.querySelector('.category-switcher');
+                const switchers = document.querySelectorAll('.language-switcher');
+                const languageDropdown = document.getElementById('language-dropdown');
+                const categoryDropdown = document.getElementById('category-dropdown');
+                
+                let clickInsideSwitcher = false;
+                // Check if the click happened inside any of the switcher containers
+                switchers.forEach(switcher => {
+                    if (switcher.contains(e.target)) {
+                        clickInsideSwitcher = true;
+                    }
+                });
 
-                if (!languageSwitcher.contains(e.target) && !categorySwitcher.contains(e.target)) {
-                    document.getElementById('language-dropdown').classList.remove('show');
-                    document.getElementById('category-dropdown').classList.remove('show');
+                // If the click was outside all switchers, close both dropdowns
+                if (!clickInsideSwitcher) {
+                    languageDropdown.classList.remove('show');
+                    categoryDropdown.classList.remove('show');
                 }
+            });
+
+            // Setup search functionality
+            const searchInput = document.getElementById('gameSearchInput');
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const searchTerm = e.target.value;
+                searchTimeout = setTimeout(() => {
+                    if (searchTerm.trim().length > 0) {
+                        displaySearchResults(searchTerm.trim());
+                    } else {
+                        showHome();
+                    }
+                }, 300); // 300ms debounce
             });
         });
 
